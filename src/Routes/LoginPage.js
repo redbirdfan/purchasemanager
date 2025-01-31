@@ -7,7 +7,6 @@ function LoginPage(){
 
     return(
         
-
         <div>
             <header>Welcome to Purchase Manager</header>
                 <p>For all of your ordering needs!</p>
