@@ -7,11 +7,13 @@ function SearchRecOrder() {
     }
 
     return (
-
-        //will build out data to be shown with the order details, parts order, and items on order
-        
+            <>
+        {/*will build out data to be shown with the order details, parts order, and items on order*/}
+        </>
 
     )
     
 
 }
+
+export default SearchRecOrder;

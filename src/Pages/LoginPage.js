@@ -6,15 +6,16 @@ function LoginPage(){
     }
 
     return(
-        
+        <>
         <div>
             <header>Welcome to Purchase Manager</header>
                 <p>For all of your ordering needs!</p>
                 
-                <input type = {{username}} name = {{username}}>Username</input>
-                <input type = {{password}} name = {{password}}>Password</input>
-                <button onClick={{checkUser}}>Login</button>
+                <input type ="text">Username</input>
+                <input type = "password">Password</input>
+                <button onClick="checkUser">Login</button>
         </div>
+        </>
     )
 }
 
