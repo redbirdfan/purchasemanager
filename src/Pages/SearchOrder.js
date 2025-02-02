@@ -1,6 +1,6 @@
 import React from "react";
 
-function SearchRecOrder() {
+function SearchOrder() {
 
     function finderOrder(){
             //call to database to search for existing Orders
@@ -8,6 +8,8 @@ function SearchRecOrder() {
 
     return (
             <>
+            <input type = "text" placeholder ="Vendor"/>
+ 
         {/*will build out data to be shown with the order details, parts order, and items on order*/}
         </>
 
@@ -16,4 +18,4 @@ function SearchRecOrder() {
 
 }
 
-export default SearchRecOrder;
+export default SearchOrder;

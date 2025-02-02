@@ -6,18 +6,19 @@ import App from './App';
 import LoginPage from './Pages/LoginPage';
 import NewOrder from './Pages/NewOrder';
 import PartDataBase from './Pages/PartDataBase';
-import SearchRecOrder from './Pages/SearchRecOrder';
+import SearchOrder from './Pages/SearchOrder';
 import reportWebVitals from './reportWebVitals';
 
 
-export default function Routing() {
+function Routing() {
   return (
     <BrowserRouter>
       <Routes>
-          <Route path="LoginPage" element={<LoginPage />} />
-          <Route path="NewOrder" element={<NewOrder />} />
-          <Route path="PartDataBase" element={<PartDataBase />} />
-          <Route path="SearchRecOrders" element={<SearchRecOrder />} />
+          <Route path="/" element={<App />} />
+            <Route path="LoginPage" element={<LoginPage />} />
+            <Route path="NewOrder" element={<NewOrder />} />
+            <Route path="PartDataBase" element={<PartDataBase />} />
+            <Route path="SearchOrder" element={<SearchOrder />} />
       </Routes>
     </BrowserRouter>
   )
@@ -26,7 +27,7 @@ export default function Routing() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Routing />
   </React.StrictMode>
 );
 

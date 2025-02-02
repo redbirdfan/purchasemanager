@@ -15,8 +15,8 @@ function NewOrder(){
         <>
         <header>Place your order...</header>
         <body>
-        <input type="text" placeholder="Vendor">Vendor</input>  {/*required to ensure part# can only be pulled from selected vendor*/}
-        <input type="text" placeholder="Part#">Part #</input> {/*You can either type the part# in if known or scroll dropdown*/}
+        <input type="text" placeholder="Vendor"/> {/*required to ensure part# can only be pulled from selected vendor*/}
+        <input type="text" placeholder="Part#"/> {/*You can either type the part# in if known or scroll dropdown*/}
         <button onClick="addToOrder">Add to order</button>
         {/*//Once selected information will be displayed in order as it is building.
         //Displayed parts will go here.*/}
