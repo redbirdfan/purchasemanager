@@ -1,10 +1,14 @@
 import React from "react";
-
+import useState from "react";
 
 function PartDataBase() {
     //create object variable to hold part# requirements. 
     //useState for array to be able to add the new part to the database
     //keys for object - Vendor, partNo, partDesc., cost 
+    const [vendor, setVendor] = useState("");
+    const [partNo, setPartNo] = useState("")
+    const [partDesc, setPartDesc] = useState("");
+    const [cost, setCost] = useState("");
 
     return (
         <>
