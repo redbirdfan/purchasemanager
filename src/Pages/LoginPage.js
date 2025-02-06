@@ -1,14 +1,14 @@
 import React from "react";
 import {useState} from "react";
 
+
 function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
 
-    function checkUser (username, password) {
-       
-        const checkUser = async () => {
+    const checkUser = async (e) => {
+            e.preventDefault();
             setErr("");
 
             if(username || password === "") {
@@ -16,13 +16,14 @@ function LoginPage() {
                 return;
             }
                 try {
-                        const response = await fetch("DataBase connection to be added here", {
+                        const response = await fetch(" ", {
                             method: "POST",
                             headers: {
-                                Content: "",
+                                "Content-Type": "application/json",
                             },
                             body: JSON.stringify({username, password}),
-                        })
+                        });
+
                 if (response){
                     const data = await response.json();
                     console.log("Database connection good")
@@ -59,6 +60,6 @@ function LoginPage() {
         </>
     );
 };
-}
+
 
 export default LoginPage
