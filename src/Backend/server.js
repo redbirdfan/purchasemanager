@@ -1,24 +1,29 @@
-require('dotenv').config();
+require('dotenv').config()
 
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const jwt = require("bcrypt");
+const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 const corsOptions = {
-    origin: "http://localhost:5000",
+    origin: "http://localhost:3000",
     credentials: true
 }
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
+
 
 const db =mysql.createConnection({ 
-    host: "localhost",
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
+    host: "",
+    user: '',
+    password: '',
+    database: ''
 });
 
 db.connect((err) => {
@@ -29,13 +34,15 @@ db.connect((err) => {
         console.log("Connect to MySQL");
 })
 
-const port = 5000;
-app.listen(port, () => {
+
+app.listen(5000, () => {
     console.log("Listening on port 5000")
 });
 
 
-app.get("/", (req, res) => {
+app.post("/loginpage", (req, res) => {
     console.log("Server route functioning")
+    res.send("Post request functioning")
+
 })
 

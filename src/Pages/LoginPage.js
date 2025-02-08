@@ -11,12 +11,13 @@ function LoginPage() {
             e.preventDefault();
             setErr("");
 
-            if(username || password === "") {
+            if(!username || !password) {
                 setErr("Username and Password required");
+                console.log("no username or password");
                 return;
             }
                 try {
-                        const response = await fetch("localhost:3306", {
+                        const response = await fetch("http://localhost:5000", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -24,17 +25,18 @@ function LoginPage() {
                             body: JSON.stringify({username, password}),
                         });
 
-                if (response){
+                if (response.ok){
                     const data = await response.json();
-                    console.log("Database connection good")
+                    console.log("data")
                 } else {
                     const errorData = await response.json();
-                    setErr(errorData)
-                    console.log("Password or User does not match")
+                    setErr("login failed")
+                    console.log(errorData);
+                    
                 } 
-            }   catch (err) {
-                setErr("Database not responding to request")
-                console.log(err);
+            }   catch (jsonError) {
+                
+                console.log("ERROR", jsonError);
                 }
             };    
         return(
