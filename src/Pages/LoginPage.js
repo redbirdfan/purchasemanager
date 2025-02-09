@@ -17,7 +17,7 @@ function LoginPage() {
                 return;
             }
                 try {
-                        const response = await fetch("http://localhost:5000", {
+                        const response = await fetch("http://localhost:5000/loginpage", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -25,25 +25,25 @@ function LoginPage() {
                             body: JSON.stringify({username, password}),
                         });
 
+                        const data = await response.json();
+
                 if (response.ok){
-                    const data = await response.json();
-                    console.log("data")
+                    console.log("response:" + data)
                 } else {
-                    const errorData = await response.json();
-                    setErr("login failed")
-                    console.log(errorData);
-                    
+                    setErr("No response")
+                    console.log(err);  
                 } 
-            }   catch (jsonError) {
+
+            }   catch (err) {
                 
-                console.log("ERROR", jsonError);
+                console.log("ERROR");
                 }
             };    
         return(
         <>
         <div>
             <header>Welcome to Purchase Manager</header>
-                <h1>For all of your ordering needs!</h1>
+                <h1>Please login below.</h1>
                 
                 <input 
                     type ="text"

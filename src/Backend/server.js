@@ -20,10 +20,10 @@ app.use(cookieParser());
 
 
 const db =mysql.createConnection({ 
-    host: "",
-    user: '',
-    password: '',
-    database: ''
+    host: "localhost",
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
 });
 
 db.connect((err) => {
@@ -31,7 +31,7 @@ db.connect((err) => {
                 console.log("MySQL connection not made: ", err);
             return;
         }
-        console.log("Connect to MySQL");
+        console.log("Connected to MySQL");
 })
 
 
@@ -40,9 +40,15 @@ app.listen(5000, () => {
 });
 
 
-app.post("/loginpage", (req, res) => {
+app.post("/loginPage", (req, res) => {
+    const {username, password} = req.body;
+    if(password && username){
+        console.log("Password and username correct")
+    } else {
+        console.log("Password and Username are missing")
+    }
     console.log("Server route functioning")
-    res.send("Post request functioning")
+    res.json({ message: "Post request functioning"});
 
 })
 

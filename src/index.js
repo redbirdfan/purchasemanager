@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './index.css';
 import App from './App';
+import Hub from './Pages/Hub'
 import LoginPage from './Pages/LoginPage';
 import NewOrder from './Pages/NewOrder';
 import PartDataBase from './Pages/PartDataBase';
@@ -19,6 +20,7 @@ function Routing() {
             <Route path="NewOrder" element={<NewOrder />} />
             <Route path="PartDataBase" element={<PartDataBase />} />
             <Route path="SearchOrder" element={<SearchOrder />} />
+            <Route path="Hub" element={<Hub />} />
       </Routes>
     </BrowserRouter>
   )
