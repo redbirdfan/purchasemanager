@@ -41,14 +41,31 @@ app.listen(5000, () => {
 
 
 app.post("/loginPage", (req, res) => {
-    const {username, password} = req.body;
-    if(password && username){
-        console.log("Password and username correct")
-    } else {
-        console.log("Password and Username are missing")
-    }
-    console.log("Server route functioning")
-    res.json({ message: "Post request functioning"});
+    const loginUsername = req.body.username;
+    const loginPassword = req.body.password
+    
+    const search = 'SELECT * FROM users WHERE Username = ? AND password = ?'
 
-})
+    db.query(search, [loginUsername, loginPassword], (err, results) => {
+            if(err) {
+                console.error(err);
+                res.status(500).send('error during login')
+                return;
+             } 
 
+             if(results.length  === 0) {
+                return res.status(401).json({ success: false, message: "Invalid username or password" })
+             }
+
+             const storedPassword = results[0].password;
+             const storedUser = results[0].Username;
+
+            if (loginPassword === storedPassword && loginUsername === storedUser) {
+                res.json({ success: true, message: "Verified login"});
+            } else {
+                res.status(401).json({ success: false, message: "Username or password incorrect"})
+            }
+            })
+
+        });   
+    

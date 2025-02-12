@@ -15,20 +15,20 @@ function LoginPage() {
                 setErr("Username and Password required");
                 console.log("no username or password");
                 return;
-            }
+            } else {
                 try {
-                        const response = await fetch("http://localhost:5000/loginpage", {
+                        const response = await fetch("http://localhost:5000/LoginPage", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({username, password}),
+                            body: JSON.stringify({ username, password }),
                         });
 
                         const data = await response.json();
 
                 if (response.ok){
-                    console.log("response:" + data)
+                    console.log(data)
                 } else {
                     setErr("No response")
                     console.log(err);  
@@ -38,7 +38,9 @@ function LoginPage() {
                 
                 console.log("ERROR");
                 }
-            };    
+            }    
+    }    
+
         return(
         <>
         <div>
