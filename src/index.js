@@ -8,6 +8,7 @@ import LoginPage from './Pages/LoginPage';
 import NewOrder from './Pages/NewOrder';
 import PartDataBase from './Pages/PartDataBase';
 import SearchOrder from './Pages/SearchOrder';
+import NewAccount from './Pages/NewAccount';
 import reportWebVitals from './reportWebVitals';
 
 
@@ -21,6 +22,7 @@ function Routing() {
             <Route path="PartDataBase" element={<PartDataBase />} />
             <Route path="SearchOrder" element={<SearchOrder />} />
             <Route path="Hub" element={<Hub />} />
+            <Route path="NewAccount" element={<NewAccount />} />
       </Routes>
     </BrowserRouter>
   )
