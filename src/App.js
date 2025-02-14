@@ -1,7 +1,5 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom'
-import LoginPage from './Pages/LoginPage';
-import NewAccount from './Pages/NewAccount';
 
 function App() {
 

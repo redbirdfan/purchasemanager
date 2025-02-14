@@ -1,5 +1,6 @@
 import React from "react";
-import useState from "react";
+import {useState} from "react";
+import PageHeader from "../Components/PageHeader";
 
 function PartDataBase() {
     //create object variable to hold part# requirements. 
@@ -12,7 +13,7 @@ function PartDataBase() {
 
     return (
         <>
-        <header>Parts</header>
+        <header><PageHeader /></header>
             <p>What are we looking for today?</p>
             <input type="text" placeholder="Vendor"/> {/*dropbox listing all vendors available*/}
             <input type="text" placeholder="Description"/>{/*available to pull all descriptions, using contains or DB to scroll*/}
