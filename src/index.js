@@ -10,7 +10,7 @@ import PartDataBase from './Pages/PartDataBase';
 import SearchOrder from './Pages/SearchOrder';
 import NewAccount from './Pages/NewAccount';
 import reportWebVitals from './reportWebVitals';
-
+import Receiving from './Pages/Receiving';
 
 function Routing() {
   return (
@@ -23,7 +23,8 @@ function Routing() {
             <Route path="SearchOrder" element={<SearchOrder />} />
             <Route path="Hub" element={<Hub />} />
             <Route path="NewAccount" element={<NewAccount />} />
-      </Routes>
+            <Route path="Receiving" element={<Receiving />} />     
+     </Routes>
     </BrowserRouter>
   )
   
