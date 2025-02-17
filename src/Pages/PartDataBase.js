@@ -3,9 +3,7 @@ import {useState} from "react";
 import PageHeader from "../Components/PageHeader";
 
 function PartDataBase() {
-    //create object variable to hold part# requirements. 
-    //useState for array to be able to add the new part to the database
-    //keys for object - Vendor, partNo, partDesc., cost 
+    
     const [vendor, setVendor] = useState("");
     const [partNo, setPartNo] = useState("")
     const [partDesc, setPartDesc] = useState("");
