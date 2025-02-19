@@ -69,3 +69,33 @@ app.post("/loginPage", (req, res) => {
 
         });   
     
+app.post("/NewAccount", (req, res) => {
+    const newUsername = req.body.newUserName;
+    const newUserPassword = req.body.newUserPassword
+    const newUserEmail = req.body.newUserEmail
+    const newFirstName = req.body.firstName
+    const newLastName = req.body.lastName
+
+    const search = 'SELECT * FROM users WHERE username = ?'
+    const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?,?,?,?,?)'
+
+    db.query(search, [newUsername], (err, results) => {
+            if(err) {
+                console.error(err);
+                res.status(500).send('error creating account')
+                return;
+             } 
+
+             if(results.length > 0) {
+                return res.status(401).json({ success: false, message: "Invalid username or password" })
+             } 
+
+            if (results.length === 0) {
+                db.query(createUser, [newUsername, newUserPassword, newUserEmail, newFirstName, newLastName], (err, results) =>{
+                    res.json({ success: true, message: "Account created"});
+            })
+            } else {
+                res.status(401).json({ success: false, message: "Username or password incorrect"})
+            }
+            })
+})

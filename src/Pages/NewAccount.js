@@ -8,9 +8,41 @@ function NewAccount() {
     const [newUserName, setNewUserName] = useState('');
     const [newUserPassword, setNewUserPassword] = useState('');
     const [newUserEmail, setNewUserEmail] = useState('');
+    const [err, setErr] = useState('');
 
-    function createUser() {
-        console.log("Tried to create account")
+    const createUser = async (e) => {
+        e.preventDefault();
+        setErr("");
+
+        if(!newUserName || !newUserPassword || !newUserEmail || !firstName || !lastName) {
+            setErr("Required field missing");
+            console.log("Required field missing");
+            return;
+        } else {
+            try {
+                    const response = await fetch("http://localhost:5000/NewAccount", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ newUserName, newUserPassword, newUserEmail, firstName, lastName }),
+                    });
+
+                    const data = await response.json();
+
+            if (response.ok){
+                console.log(data)
+            } else {
+                setErr("No response")
+                console.log(err);  
+            } 
+
+        }   catch (err) {
+            
+            console.log("ERROR");
+            }
+        }    
+        
     }
 
     return (
@@ -51,7 +83,7 @@ function NewAccount() {
                 onChange={(e) => {setNewUserEmail(e.target.value)}}
             />
             <br></br>
-            <button>Create Account</button>
+            <button onClick={createUser}>Create Account</button>
             </>
         )
     }
