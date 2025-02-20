@@ -77,25 +77,32 @@ app.post("/NewAccount", (req, res) => {
     const newLastName = req.body.lastName
 
     const search = 'SELECT * FROM users WHERE username = ?'
-    const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?,?,?,?,?)'
+    const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)'
 
     db.query(search, [newUsername], (err, results) => {
             if(err) {
                 console.error(err);
-                res.status(500).send('error creating account')
-                return;
+                return res.status(500).send('error creating account')
              } 
 
-             if(results.length > 0) {
-                return res.status(401).json({ success: false, message: "Invalid username or password" })
+             if(results.length !== 0) {
+                return res.status(409).json({ success: false, message: "Username already exists" })
              } 
 
             if (results.length === 0) {
-                db.query(createUser, [newUsername, newUserPassword, newUserEmail, newFirstName, newLastName], (err, results) =>{
-                    res.json({ success: true, message: "Account created"});
-            })
-            } else {
-                res.status(401).json({ success: false, message: "Username or password incorrect"})
+                db.query(createUser, [newUsername, newUserPassword, newUserEmail, newFirstName, newLastName], (err, createResults) => {
+                  if(err) {
+                    console.error(err);
+                    return res.status(500).json({success: false, message: 'Error creating account'})
+                  }
+
+                if (createResults.affectedRows >  0) {
+                    return res.status(201).json({success: true, message: "Account created"});
+                 } else {
+                    console.error("No rows affected, account not created")
+                    return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'})
+                  }
+                })
             }
-            })
-})
+        })
+    })
