@@ -1,12 +1,19 @@
 import React from "react";
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
+
 
 
 function LoginPage() {
+   {/*} const navigate = useNavigate();
+
+    function loginCorrect(){
+        navigate("/hub");
+    }*/}
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
-
+ 
     const checkUser = async (e) => {
             e.preventDefault();
             setErr("");
@@ -28,6 +35,7 @@ function LoginPage() {
                         const data = await response.json();
 
                 if (response.ok){
+                    console.log("backend connection successful")
                     console.log(data)
                 } else {
                     setErr("No response")
