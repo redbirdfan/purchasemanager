@@ -47,6 +47,7 @@ function NewAccount() {
 
     return (
         <>
+        <div style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
         <h1>New Account page</h1>
             <input
                 type="text"
@@ -84,6 +85,7 @@ function NewAccount() {
             />
             <br></br>
             <button onClick={createUser}>Create Account</button>
+            </div>
             </>
         )
     }

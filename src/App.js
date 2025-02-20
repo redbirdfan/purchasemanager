@@ -18,9 +18,9 @@ function App() {
     <div className='button-container'>
 
         <header>Welcome to Purchase Manager</header>
-          <button onClick={handleLogin}>Login</button>
+          <button style={{width:145}} onClick={handleLogin}>Login</button>
           <br></br>
-          <button onClick={createUser}>Create New Account</button>    
+          <button style={{width:145}} onClick={createUser}>Create New Account</button>    
     </div>
   );
 }

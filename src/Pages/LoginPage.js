@@ -52,10 +52,10 @@ function LoginPage() {
 
         return(
         <>
-        <div>
+        <div style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
             <header>Welcome to Purchase Manager</header>
-                <h1>Please login below.</h1>
-                
+                <h1>Please login below</h1>
+
                 <input 
                     type ="text"
                     placeholder = "Username"
