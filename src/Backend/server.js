@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const express = require("express");
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -18,41 +18,40 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+async function createDbConnection() {
+    try {
+        const db = await mysql.createConnection({ 
+            host: "localhost",
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+        });     
+        console.log("Connected to mySQL");
+        return db;
+    }catch (err) {
+        console.log("Connection not successful:", err);
+        throw err;
+    }
+}
 
-const db =mysql.createConnection({ 
-    host: "localhost",
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-});
+async function startServer(){
+    try {
+        const db = await createDbConnection();
 
-db.connect((err) => {
-        if(err) {
-                console.log("MySQL connection not made: ", err);
-            return;
-        }
-        console.log("Connected to MySQL");
-})
-
-
-app.listen(5000, () => {
-    console.log("Listening on port 5000")
-});
+        app.listen(5000, () => {
+        console.log("Listening on port 5000")
+    });
 
 
 app.post("/loginPage", async (req, res) => {
     const loginUsername = req.body.username;
     const loginPassword = req.body.password
     
-    const search = 'SELECT * FROM users WHERE Username = ?'
+    const search = 'SELECT * FROM users WHERE Username = ?';
 
     try{
-    db.query(search, [loginUsername], async (err, results) => {
-            if(err) {
-                console.error(err);
-                res.status(500).send('error during login')
-                return;
-             } 
+
+    const [results]=await db.query(search, [loginUsername]);
 
              if(results.length  === 0) {
                 return res.status(401).json({ success: false, message: "Invalid username" })
@@ -66,20 +65,20 @@ app.post("/loginPage", async (req, res) => {
             if (passwordMatch) {
                 const payload = {
                     Username: storedUser,
-                }
+                };
 
-                const token = jwt.sign(payload, { expiresIn: '1h' });
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
             res.json({ token });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
-            } 
-        });   
+            }      
     } catch (error) {
         console.log("Error:", error)
         return res.status(500).json({success: "False", message: "Server error"})
     }
-    
+});
+
 app.post("/NewAccount", async (req, res) => {
     const newUsername = req.body.newUserName;
     const newUserPassword = req.body.newUserPassword
@@ -91,11 +90,7 @@ app.post("/NewAccount", async (req, res) => {
         const search = 'SELECT * FROM users WHERE username = ?'
         const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)'
 
-        db.query(search, [newUsername], async (err, results) => {
-            if(err) {
-                console.error(err);
-                return res.status(500).send('error creating account')
-             } 
+        const [results] = await db.query(search, [newUsername]);
 
              if(results.length !== 0) {
                 return res.status(409).json({ success: false, message: "Username already exists" })
@@ -103,24 +98,24 @@ app.post("/NewAccount", async (req, res) => {
 
             if (results.length === 0) {
                 const hashedPassword = await bcrypt.hash(newUserPassword, 10);
-
-                db.query(createUser, [newUsername, hashedPassword, newUserEmail, newFirstName, newLastName], async (err, createResults) => {
-                  if(err) {
-                    console.error(err);
-                    return res.status(500).json({success: false, message: 'Error creating account'})
-                  }
+                const createResults = await db.query(createUser, [newUsername, hashedPassword, newUserEmail, newFirstName, newLastName]);
 
                 if (createResults.affectedRows >  0) {
                     return res.status(201).json({success: true, message: "Account created"});
-                 } else {
+                } else {
                     console.error("Account not created")
                     return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'});
-                  }
-                });
+                }
+            };
+        } catch (error) {
+            console.error("Account not created", error);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
             }
         });
-    } catch (error) {
-    console.error("Account not created", error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }   catch(err){
+        console.error("Server startup error:", err);
     }
-});
+}
+
+startServer();
+    

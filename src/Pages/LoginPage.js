@@ -5,11 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 function LoginPage() {
-   {/*} const navigate = useNavigate();
-
-    function loginCorrect(){
-        navigate("/hub");
-    }*/}
+ 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
@@ -24,7 +20,7 @@ function LoginPage() {
                 return;
             } else {
                 try {
-                        const response = await fetch("http://localhost:5000/LoginPage", {
+                        const response = await fetch("http://localhost:5000/loginPage", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -32,9 +28,10 @@ function LoginPage() {
                             body: JSON.stringify({ username, password }),
                         });
 
-                        const data = await response.json();
+                        const data = await response.json();   
 
                 if (response.ok){
+                    
                     console.log("backend connection successful")
                     console.log(data)
                 } else {
@@ -43,8 +40,7 @@ function LoginPage() {
                 } 
 
             }   catch (err) {
-                
-                console.log("ERROR");
+                console.log("ERROR", err);
                 }
             }    
     }    

@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 function NewAccount() {
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [newUserName, setNewUserName] = useState('');
     const [newUserPassword, setNewUserPassword] = useState('');
     const [newUserEmail, setNewUserEmail] = useState('');
@@ -28,9 +28,10 @@ function NewAccount() {
                         body: JSON.stringify({ newUserName, newUserPassword, newUserEmail, firstName, lastName }),
                     });
 
-                    const data = await response.json();
+                    
 
             if (response.ok){
+                const data = await response.json();
                 console.log(data)
             } else {
                 setErr("No response")
