@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const jwt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 
@@ -40,13 +40,14 @@ app.listen(5000, () => {
 });
 
 
-app.post("/loginPage", (req, res) => {
+app.post("/loginPage", async (req, res) => {
     const loginUsername = req.body.username;
     const loginPassword = req.body.password
     
-    const search = 'SELECT * FROM users WHERE Username = ? AND password = ?'
+    const search = 'SELECT * FROM users WHERE Username = ?'
 
-    db.query(search, [loginUsername, loginPassword], (err, results) => {
+    try{
+    db.query(search, [loginUsername], async (err, results) => {
             if(err) {
                 console.error(err);
                 res.status(500).send('error during login')
@@ -54,32 +55,43 @@ app.post("/loginPage", (req, res) => {
              } 
 
              if(results.length  === 0) {
-                return res.status(401).json({ success: false, message: "Invalid username or password" })
+                return res.status(401).json({ success: false, message: "Invalid username" })
              }
 
-             const storedPassword = results[0].password;
+             const storedHashedPassword = results[0].password;
              const storedUser = results[0].Username;
 
-            if (loginPassword === storedPassword && loginUsername === storedUser) {
-                res.json({ success: true, message: "Verified login"});
-            } else {
-                res.status(401).json({ success: false, message: "Username or password incorrect"})
-            }
-            })
+             const passwordMatch = await bcrypt.compare(loginPassword, storedHashedPassword);
 
+            if (passwordMatch) {
+                const payload = {
+                    Username: storedUser,
+                }
+
+                const token = jwt.sign(payload, { expiresIn: '1h' });
+
+            res.json({ token });
+        } else {
+            res.status(401).json({ message: 'Invalid credentials' });
+            } 
         });   
+    } catch (error) {
+        console.log("Error:", error)
+        return res.status(500).json({success: "False", message: "Server error"})
+    }
     
-app.post("/NewAccount", (req, res) => {
+app.post("/NewAccount", async (req, res) => {
     const newUsername = req.body.newUserName;
     const newUserPassword = req.body.newUserPassword
     const newUserEmail = req.body.newUserEmail
     const newFirstName = req.body.firstName
     const newLastName = req.body.lastName
 
-    const search = 'SELECT * FROM users WHERE username = ?'
-    const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)'
+    try{
+        const search = 'SELECT * FROM users WHERE username = ?'
+        const createUser = 'INSERT INTO users (Username, password, email, FirstName, LastName) VALUES (?, ?, ?, ?, ?)'
 
-    db.query(search, [newUsername], (err, results) => {
+        db.query(search, [newUsername], async (err, results) => {
             if(err) {
                 console.error(err);
                 return res.status(500).send('error creating account')
@@ -90,7 +102,9 @@ app.post("/NewAccount", (req, res) => {
              } 
 
             if (results.length === 0) {
-                db.query(createUser, [newUsername, newUserPassword, newUserEmail, newFirstName, newLastName], (err, createResults) => {
+                const hashedPassword = await bcrypt.hash(newUserPassword, 10);
+
+                db.query(createUser, [newUsername, hashedPassword, newUserEmail, newFirstName, newLastName], async (err, createResults) => {
                   if(err) {
                     console.error(err);
                     return res.status(500).json({success: false, message: 'Error creating account'})
@@ -99,10 +113,14 @@ app.post("/NewAccount", (req, res) => {
                 if (createResults.affectedRows >  0) {
                     return res.status(201).json({success: true, message: "Account created"});
                  } else {
-                    console.error("No rows affected, account not created")
-                    return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'})
+                    console.error("Account not created")
+                    return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'});
                   }
-                })
+                });
             }
-        })
-    })
+        });
+    } catch (error) {
+    console.error("Account not created", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
