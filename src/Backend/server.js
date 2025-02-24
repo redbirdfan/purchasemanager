@@ -119,15 +119,15 @@ app.post("/NewAccount", async (req, res) => {
     }
 
 
-app.get('/vendors', async (req, res) => {
-    const vendor = req.body.vendor;
+app.get('/vendor', async (req, res) => {
+    const vendor = req.query.vendor;
          
         try{
-            const search = 'SELECT * FROM vendor WHERE vendor = ?'
+            const search = 'SELECT * FROM vendor WHERE VendorName = ?'
             
-            const results = (search, [vendor])
+            const results = db.query(search, [vendor], (err, results))
 
-            if (results > 0) {
+            if (results.length > 0) {
                 return res.status(201).json({success: true, message: "Vendor found"});
         } else {
             console.error("Vendor not found");
