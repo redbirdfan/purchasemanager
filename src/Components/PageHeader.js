@@ -9,6 +9,7 @@ function PageHeader(){
         <Link to={"/NewOrder"} style={{marginRight: "50px"}}>New Order</Link>
         <Link to={"/PartDataBase"} style={{marginRight: "30px", marginLeft: "30px"}}>Find a Part#</Link>
         <Link to={"/SearchOrder"} style={{marginLeft: "30px"}}>Find Order</Link>
+        <Link to={"/Vendors"} style={{marginLeft: "30px"}}>Vendors</Link>
         </div>
         </>
     )

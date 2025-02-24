@@ -79,6 +79,7 @@ app.post("/loginPage", async (req, res) => {
     }
 });
 
+
 app.post("/NewAccount", async (req, res) => {
     const newUsername = req.body.newUserName;
     const newUserPassword = req.body.newUserPassword
@@ -102,6 +103,7 @@ app.post("/NewAccount", async (req, res) => {
 
                 if (createResults.affectedRows >  0) {
                     return res.status(201).json({success: true, message: "Account created"});
+
                 } else {
                     console.error("Account not created")
                     return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'});
@@ -115,7 +117,28 @@ app.post("/NewAccount", async (req, res) => {
     }   catch(err){
         console.error("Server startup error:", err);
     }
-}
 
+
+app.get('/vendors', async (req, res) => {
+    const vendor = req.body.vendor;
+         
+        try{
+            const search = 'SELECT * FROM vendor WHERE vendor = ?'
+            
+            const results = (search, [vendor])
+
+            if (results > 0) {
+                return res.status(201).json({success: true, message: "Vendor found"});
+        } else {
+            console.error("Vendor not found");
+            return res.status(500).json({ success: false, message: "Vendor not found"})
+            }
+        } catch (error) {
+            console.error("Issue finding Vendor", err)
+        }
+    })
+
+
+}
 startServer();
     

@@ -11,7 +11,7 @@ import SearchOrder from './Pages/SearchOrder';
 import NewAccount from './Pages/NewAccount';
 import reportWebVitals from './reportWebVitals';
 import Receiving from './Pages/Receiving';
-
+import Vendor from './Pages/Vendor'
 
 function Routing() {
   return (
@@ -24,7 +24,8 @@ function Routing() {
             <Route path="SearchOrder" element={<SearchOrder />} />
             <Route path="Hub" element={<Hub />} />
             <Route path="NewAccount" element={<NewAccount />} />
-            <Route path="Receiving" element={<Receiving />} />    
+            <Route path="Receiving" element={<Receiving />} />
+            <Route path="Vendors" element={(<Vendor />)} />    
      </Routes>
     </BrowserRouter>
   )

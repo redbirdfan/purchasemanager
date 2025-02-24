@@ -21,6 +21,8 @@ function Hub() {
             <button onClick={startOrder}>New Order</button>
             <button onClick={findOrder}>Create an Order</button>
             <button onClick={goToPartDataBase}>Find a part#</button>
+            <button>Vendors</button>
+            <button>Order Maintenance</button>
         </>
     )
 }

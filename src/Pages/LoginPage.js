@@ -10,6 +10,8 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
  
+    const navigate = useNavigate();
+
     const checkUser = async (e) => {
             e.preventDefault();
             setErr("");
@@ -31,7 +33,9 @@ function LoginPage() {
                         const data = await response.json();   
 
                 if (response.ok){
-                    
+                    const token = data.token;
+                    localStorage.setItem('token', token)
+                    navigate('/hub')
                     console.log("backend connection successful")
                     console.log(data)
                 } else {

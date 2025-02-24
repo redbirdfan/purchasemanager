@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from 'react';
-
+import { useNavigate } from "react-router-dom";
 function NewAccount() {
 
     const [firstName, setFirstName] = useState('');
@@ -9,6 +9,8 @@ function NewAccount() {
     const [newUserPassword, setNewUserPassword] = useState('');
     const [newUserEmail, setNewUserEmail] = useState('');
     const [err, setErr] = useState('');
+
+    const navigate = useNavigate();
 
     const createUser = async (e) => {
         e.preventDefault();
@@ -31,8 +33,10 @@ function NewAccount() {
                     
 
             if (response.ok){
+                
                 const data = await response.json();
                 console.log(data)
+
             } else {
                 setErr("No response")
                 console.log(err);  
