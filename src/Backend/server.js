@@ -37,7 +37,7 @@ async function createDbConnection() {
 async function startServer(){
     try {
         const db = await createDbConnection();
-
+        app.db = db;
         app.listen(5000, () => {
         console.log("Listening on port 5000")
     });
@@ -120,21 +120,21 @@ app.post("/NewAccount", async (req, res) => {
 
 
 app.get('/vendor', async (req, res) => {
-    const vendor = req.query.vendor;
+    const vendor = req.query.VendorName;
          
         try{
             const search = 'SELECT * FROM vendor WHERE VendorName = ?'
-            
-            const results = db.query(search, [vendor], (err, results))
+            const [results] = await app.db.query(search, [vendor])
 
             if (results.length > 0) {
-                return res.status(201).json({success: true, message: "Vendor found"});
+                return res.status(200).json({success: true, message: "Vendor found", data: results});
         } else {
             console.error("Vendor not found");
-            return res.status(500).json({ success: false, message: "Vendor not found"})
+            return res.status(404).json({ success: false, message: "Vendor not found"})
             }
-        } catch (error) {
-            console.error("Issue finding Vendor", err)
+        } catch (err) {
+            console.error("Issue Seaching:", err)
+            return res.status(500).json({ success: false, message: "Internal server error" });
         }
     })
 
