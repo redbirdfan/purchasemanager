@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+
 function PageHeader(){
 
     return(
@@ -8,8 +9,9 @@ function PageHeader(){
         <div style={{display: "flex", justifyContent:"center"}}>
         <Link to={"/NewOrder"} style={{marginRight: "50px"}}>New Order</Link>
         <Link to={"/PartDataBase"} style={{marginRight: "30px", marginLeft: "30px"}}>Find a Part#</Link>
-        <Link to={"/SearchOrder"} style={{marginLeft: "30px"}}>Find Order</Link>
-        <Link to={"/Vendors"} style={{marginLeft: "30px"}}>Vendors</Link>
+        <Link to={"/SearchOrder"} style={{marginRight: "30px", marginLeft: "30px"}}>Find Order</Link>
+        <Link to={"/Vendors"} style={{marginRight: "30px", marginLeft: "30px"}}>Vendors</Link>
+        <Link to={"/Receiving"} style={{marginRight: "30px", marginLeft: "30px"}}>Receiving</Link>
         </div>
         </>
     )

@@ -9,7 +9,7 @@ function Vendor(){
     const [phone, setPhone] = useState('');
     const [account, setAccount] = useState('')
     const [err, setErr] = useState('');
-
+    const [data, setData] =useState(null)
     const searchVendor = async (e) => {
         e.preventDefault();
         setErr("")
@@ -26,7 +26,8 @@ function Vendor(){
                     "Content-Type": "application/json",
                 },
             });
-            const data = await response.json()
+            const responseData = await response.json()
+            setData(responseData)
 
             if (response.ok){
                     console.log("backend connection successful")
@@ -69,6 +70,10 @@ function Vendor(){
         />
 
         <button onClick={searchVendor}>Search</button>
+
+        <div>
+            
+        </div>
         </>
     )
 

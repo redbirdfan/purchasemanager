@@ -6,7 +6,9 @@ function Receiving() {
     return(
         <>
             <div>
-                <PageHeader />    
+                <PageHeader />  
+                <h1>Under Construction</h1>
+                <p>Receiving orders coming soon</p>  
            </div>
         </>
     )
