@@ -28,31 +28,32 @@ function Hub() {
     return(
         <>
         <h1>Select your search</h1>
-            
-            <button onClick={startOrder} className="flex items-center">
-                <NewspaperIcon className="h-5 w-5 mr-2" />
+            <div>
+            <button onClick={startOrder} style={{width: 150, height: 150}} className="flex items-center">
                 New Order
+                <NewspaperIcon className="h-5 w-5 mr-2" />
                 </button>
             
-            <button onClick={findOrder} className="flex items-center">
-                <PencilIcon className="h-5 w-5 mr-2" />
-                Create an Order
+            <button onClick={findOrder} style={{width: 150, height: 150}} className="flex items-center">
+                Search Order
+                <PencilIcon className="h-5 w-5 mr-2" /> 
                 </button>
             
-            <button onClick={goToPartDataBase} className="flex items-center">
+            <button onClick={goToPartDataBase} style={{width: 150, height: 150}} className="flex items-center">
+                Find a Part
                 <CogIcon className="h-5 w-5 mr-2" />
-                Find a part
                 </button>
             
-            <button onClick={goToVendors} className="flex items-center">
-                <BookmarkSquareIcon className="h-5 w-5 mr-2" />        
+            <button onClick={goToVendors} style={{width: 150, height: 150}} className="flex items-center">
                 Vendors
+                <BookmarkSquareIcon className="h-5 w-5 mr-2" />        
                 </button>
             
-            <button onClick={gotToReceiving} className="flex items-center">
-                <ClipboardDocumentCheckIcon className="h-5 w-5 mr-2/" />
+            <button onClick={gotToReceiving} style={{width: 150, height: 150}} className="flex items-center" >
                 Receiving
+                <ClipboardDocumentCheckIcon className="h-5 w-5 mr-2/" />
                 </button>
+            </div>
         </>
     )
 }

@@ -10,6 +10,7 @@ function Vendor(){
     const [account, setAccount] = useState('')
     const [err, setErr] = useState('');
     const [data, setData] =useState(null)
+    
     const searchVendor = async (e) => {
         e.preventDefault();
         setErr("")
