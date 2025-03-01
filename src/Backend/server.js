@@ -139,6 +139,25 @@ app.get('/vendor', async (req, res) => {
     })
 
 
+app.get("/parts", async (req, res) => {
+    const partno = req.query.partNo;
+
+    try { 
+        const search = 'SELECT * FROM parts WHERE partno = ?'
+        const [results] = await app.db.query(search, [partno])
+
+        if(results.length > 0) {
+            return res.status(200).json({success: true, message: "Part found", data: results});
+    } else {
+        console.error("Part not found");
+        return res.status(404).json({ success: false, message: "Part not found"})
+        }
+    } catch (err) {
+        console.error("Issue Searching:", err)
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+})
+
 }
 startServer();
     
