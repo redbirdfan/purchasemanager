@@ -11,16 +11,31 @@ function PartDataBase() {
     const [cost, setCost] = useState("");
     const [err, setErr] = useState("")
     const [data, setData] = useState("")
-
+    const [searchComplete, setSearchComplete] = useState(false)
+    
     const findPart = async (e) => {
         e.preventDefault();
         setErr("")
-
+        setSearchComplete(true)
         try {
 
-            const searchFields = new URLSearchParams({
-                partno: partNo,
-            })
+            const searchFields = new URLSearchParams()
+
+            if(vendor){
+                searchFields.append("vendor", vendor)
+            }
+
+            if(partNo){
+                searchFields.append("partno", partNo)
+            }
+            
+            if(partDesc){
+                searchFields.append("partdesc", partDesc)
+            }
+
+            if(cost){
+                searchFields.append("cost", cost)
+            }
 
             const response = await fetch(`http://localhost:5000/parts?${searchFields}`, {
                 method: "GET",
@@ -30,7 +45,6 @@ function PartDataBase() {
             });
            
             const responseData = await response.json()
-           
             setData(responseData)
 
             if (response.ok){
@@ -38,8 +52,9 @@ function PartDataBase() {
                     console.log(data)
                 } else {
                     setErr("No response")
-                    console.log(err);  
-                } 
+                    console.log(err);
+                    setData(null)  
+                }   
 
             }   catch (err) {
                 console.log("ERROR", err);
@@ -88,6 +103,16 @@ function PartDataBase() {
             
             <button onClick={findPart}>Find Part</button>
             <button>Clear Search</button>
+            <div>
+            {data && data.length > 0 && searchComplete && data.data.map((parts, index) => (
+                <div key = {index}>
+                    <p>{parts?.vendor}</p>
+                    <p>{parts?.partNo}</p> 
+                    <p>{parts?.partdesc}</p>
+                    <p>{parts?.cost}</p>
+                 </div>
+            ))}
+            </div>
         </>
     )
 }

@@ -160,11 +160,31 @@ app.get('/vendor', async (req, res) => {
 
 
 app.get("/parts", async (req, res) => {
-    const partno = req.query.partNo;
+    const {vendor, partno, partdesc, cost} = req.query;
 
     try { 
-        const search = 'SELECT * FROM parts WHERE partno = ?'
-        const [results] = await app.db.query(search, [partno])
+        const search = 'SELECT * FROM vendor WHERE 1=1'
+            
+        const params = [];
+
+            if (vendor) {
+              query += ' AND TRIM(LOWER((vendor))) = TRIM(LOWER(?))';
+              params.push(vendor);
+            }
+            if (partno) {
+              query += ' AND TRIM(partno) = TRIM(?)';
+              params.push(partno);
+            }
+            if (partdesc) {
+              query += ' AND TRIM(partdesc) = TRIM(?)';
+              params.push(partdesc);
+            }
+            if (cost) {
+              query += ' AND cost = ?';
+              params.push(cost);
+            }
+        
+        const [results] = await app.db.query(search, params)
 
         if(results.length > 0) {
             return res.status(200).json({success: true, message: "Part found", data: results});
