@@ -121,30 +121,31 @@ app.post("/NewAccount", async (req, res) => {
 
 app.get('/vendor', async (req, res) => {
     const {VendorName, Address, phone, account} = req.query;
+    
          
         try{
-            const search = 'SELECT * FROM vendor WHERE 1=1'
+            let search = 'SELECT * FROM vendor WHERE 1=1'
             
             const params = [];
 
             if (VendorName) {
-              query += ' AND TRIM(LOWER(VendorName)) = TRIM(LOWER(?))';
+              search += ' AND TRIM(LOWER(VendorName)) = TRIM(LOWER(?))';
               params.push(VendorName);
             }
             if (Address) {
-              query += ' AND TRIM(Address) = TRIM(?)';
-              params.push(address);
+              search += ' AND TRIM(Address) = TRIM(?)';
+              params.push(Address);
             }
             if (phone) {
-              query += ' AND TRIM(phone) = TRIM(?)';
+              search += ' AND TRIM(phone) = TRIM(?)';
               params.push(phone);
             }
             if (account) {
-              query += ' AND TRIM(account) = TRIM(?)';
+              search += ' AND TRIM(account) = TRIM(?)';
               params.push(account);
             }
         
-            const [results] = await app.db.query(query, params)
+            const [results] = await app.db.query(search, params)
 
             if (results.length > 0) {
                 return res.status(200).json({success: true, message: "Vendor found", data: results});
@@ -161,26 +162,27 @@ app.get('/vendor', async (req, res) => {
 
 app.get("/parts", async (req, res) => {
     const {vendor, partno, partdesc, cost} = req.query;
+    console.log("Vendor Request:", req.query)
 
     try { 
-        const search = 'SELECT * FROM vendor WHERE 1=1'
+        let search = 'SELECT * FROM parts WHERE 1=1'
             
         const params = [];
 
             if (vendor) {
-              query += ' AND TRIM(LOWER((vendor))) = TRIM(LOWER(?))';
+              search += ' AND TRIM(LOWER(vendor)) = TRIM(LOWER(?))';
               params.push(vendor);
             }
             if (partno) {
-              query += ' AND TRIM(partno) = TRIM(?)';
+              search += ' AND TRIM(partno) = TRIM(?)';
               params.push(partno);
             }
             if (partdesc) {
-              query += ' AND TRIM(partdesc) = TRIM(?)';
+              search += ' AND TRIM(partdesc) = TRIM(?)';
               params.push(partdesc);
             }
             if (cost) {
-              query += ' AND cost = ?';
+              search += ' AND cost = ?';
               params.push(cost);
             }
         

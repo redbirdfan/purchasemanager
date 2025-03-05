@@ -49,7 +49,7 @@ function PartDataBase() {
 
             if (response.ok){
                     console.log("backend connection successful")
-                    console.log(data)
+                    console.log(responseData)
                 } else {
                     setErr("No response")
                     console.log(err);
@@ -71,15 +71,15 @@ function PartDataBase() {
                 type="text"                
                 className="buttonpadding" 
                 placeholder="vendor" 
-                value= {vendor}
-                onchange={(e) => setVendor(e.target.value)}
+                value= { vendor }
+                onChange={(e) => setVendor(e.target.value)}
             /> 
             
             <input 
                 type="text" 
                 className="buttonpadding" 
                 placeholder="description" 
-                value={partDesc}
+                value={ partDesc }
                 onChange={(e) => setPartDesc(e.target.value)}
             />
 
@@ -104,10 +104,10 @@ function PartDataBase() {
             <button onClick={findPart}>Find Part</button>
             <button>Clear Search</button>
             <div>
-            {data && data.length > 0 && searchComplete && data.data.map((parts, index) => (
+            {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
                 <div key = {index}>
                     <p>{parts?.vendor}</p>
-                    <p>{parts?.partNo}</p> 
+                    <p>{parts?.partno}</p> 
                     <p>{parts?.partdesc}</p>
                     <p>{parts?.cost}</p>
                  </div>
