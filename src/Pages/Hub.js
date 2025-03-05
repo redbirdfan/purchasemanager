@@ -27,8 +27,7 @@ function Hub() {
 
     return(
         <>
-        <h1>Select your search</h1>
-            <div>
+            <div style={{display: "flex", alignItems: 'center',justifyContent: 'center'}}>
             <button onClick={startOrder} style={{width: 150, height: 150}} className="flex items-center">
                 New Order
                 <NewspaperIcon className="h-5 w-5 mr-2" />

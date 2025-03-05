@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline'
 
 
 function PageHeader(){
 
     return(
-        <>
+        <> 
         <div style={{display: "flex", justifyContent:"center"}}>
         <Link to={"/NewOrder"} style={{marginRight: "50px"}}>New Order</Link>
         <Link to={"/PartDataBase"} style={{marginRight: "30px", marginLeft: "30px"}}>Find a Part#</Link>
