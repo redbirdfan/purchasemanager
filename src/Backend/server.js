@@ -218,21 +218,20 @@ app.post('/newpart', async(req, res) => {
 
             if (results.length === 0) {
             
-                const createResults = await db.query(createUser, [newUsername, hashedPassword, newUserEmail, newFirstName, newLastName]);
+                const createResults = await db.query(newPart, [vendor, partno, partdesc, cost]);
 
                 if (createResults.affectedRows >  0) {
-                    return res.status(201).json({success: true, message: "Account created"});
+                    return res.status(201).json({success: true, message: "Part created"});
 
                 } else {
-                    console.error("Account not created")
-                    return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'});
+                    console.error("Part not created")
+                    return res.status(500).json({ success: false, message: 'Error Creating new part, no rows effected'});
                 }
             };
         } catch (error) {
-            console.error("Account not created", error);
+            console.error("Part not created", error);
             return res.status(500).json({ success: false, message: "Internal Server Error" });
             }
-        });
     }   catch(err){
         console.error("Server startup error:", err);
     }
