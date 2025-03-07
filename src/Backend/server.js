@@ -124,7 +124,7 @@ app.get('/vendor', async (req, res) => {
     
          
         try{
-            let search = 'SELECT * FROM vendor WHERE 1=1'
+            let search = 'SELECT * FROM vendor WHERE'
             
             const params = [];
 
@@ -200,6 +200,43 @@ app.get("/parts", async (req, res) => {
     }
 })
 
-}
+app.post('/newpart', async(req, res) => {
+    const vendor = req.body.vendor;
+    const partNo = req.body.partNo;
+    const partDesc = req.body.partDesc
+    const cost = req.body.cost
+
+    try{
+        const search = 'SELECT * FROM users WHERE vendor = ? AND partno = ?  AND partdesc = ?"'
+        const newPart = 'INSERT INTO users (vendor, partno, partdesc, cost) VALUES (?, ?, ?, ?)'
+
+        const [results] = await db.query(search, [newPart]);
+
+             if(results.length !== 0) {
+                return res.status(409).json({ success: false, message: "Part already exists" })
+             } 
+
+            if (results.length === 0) {
+            
+                const createResults = await db.query(createUser, [newUsername, hashedPassword, newUserEmail, newFirstName, newLastName]);
+
+                if (createResults.affectedRows >  0) {
+                    return res.status(201).json({success: true, message: "Account created"});
+
+                } else {
+                    console.error("Account not created")
+                    return res.status(500).json({ success: false, message: 'Error Creating account, no rows effected'});
+                }
+            };
+        } catch (error) {
+            console.error("Account not created", error);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
+            }
+        });
+    }   catch(err){
+        console.error("Server startup error:", err);
+    }
+})
+
 startServer();
     

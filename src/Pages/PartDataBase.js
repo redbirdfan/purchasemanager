@@ -13,6 +13,19 @@ function PartDataBase() {
     const [data, setData] = useState("")
     const [searchComplete, setSearchComplete] = useState(false)
     
+    function clearSearch(){
+        setVendor('');
+        setPartNo('');
+        setPartDesc('')
+        setCost('')
+        setErr('')
+        setData('')
+        setSearchComplete(false)
+        console.log("data and fields wiped")
+        console.log('vendor:' +vendor)
+
+    }
+
     const findPart = async (e) => {
         e.preventDefault();
         setErr("")
@@ -59,9 +72,50 @@ function PartDataBase() {
             }   catch (err) {
                 console.log("ERROR", err);
                 }
-          
-        }
 
+
+        const newPart = async (e) => {
+            e.preventDefault();
+            setErr("");
+
+            if(!vendor || !partNo || !partDesc || !cost) {
+                        setErr("Required field missing");
+                        console.log("Required field missing");
+                        return;
+                    } else {
+                        try {
+                                const response = await fetch("http://localhost:5000/newpart", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ vendor, partNo, partDesc, cost }),
+                                });
+            
+                                
+            
+                        if (response.ok){
+                            
+                            const data = await response.json();
+                            console.log("New Part:" + data)
+            
+                        } else {
+                            setErr("No response")
+                            console.log(err);  
+                        } 
+            
+                    }   catch (err) {
+                        
+                        console.log("ERROR");
+                        }
+                    }    
+                    
+                }
+            
+            }  
+        
+
+    
     return (
         <>
         <header><PageHeader /></header>
@@ -102,7 +156,8 @@ function PartDataBase() {
             <br></br>
             
             <button onClick={findPart}>Find Part</button>
-            <button>Clear Search</button>
+            <button onClick={newPart}>Add Part</button>
+            <button onClick={clearSearch}>Clear Search</button>
             <div>
             {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
                 <div key = {index}>
@@ -115,6 +170,8 @@ function PartDataBase() {
             </div>
         </>
     )
-}
+       }
+    
+
 
 export default PartDataBase;
