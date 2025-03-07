@@ -72,7 +72,7 @@ function PartDataBase() {
             }   catch (err) {
                 console.log("ERROR", err);
                 }
-
+            }
 
         const newPart = async (e) => {
             e.preventDefault();
@@ -84,7 +84,7 @@ function PartDataBase() {
                         return;
                     } else {
                         try {
-                                const response = await fetch("http://localhost:5000/newpart", {
+                                const response = await fetch("http://localhost:5000/parts", {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",
@@ -110,9 +110,7 @@ function PartDataBase() {
                         }
                     }    
                     
-                }
-            
-            }  
+                }  
         
 
     
@@ -132,17 +130,17 @@ function PartDataBase() {
             <input 
                 type="text" 
                 className="buttonpadding" 
-                placeholder="description" 
-                value={ partDesc }
-                onChange={(e) => setPartDesc(e.target.value)}
+                placeholder="part#" 
+                value={ partNo }
+                onChange={(e) => setPartNo(e.target.value)}
             />
 
             <input 
                 type="text" 
                 className="buttonpadding" 
-                placeholder="part#" 
-                value= { partNo }
-                onChange={(e) => setPartNo(e.target.value)}
+                placeholder="Item Description" 
+                value= { partDesc }
+                onChange={(e) => setPartDesc(e.target.value)}
             /> 
             
             <input 

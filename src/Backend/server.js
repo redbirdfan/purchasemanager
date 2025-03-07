@@ -200,42 +200,44 @@ app.get("/parts", async (req, res) => {
     }
 })
 
-app.post('/newpart', async(req, res) => {
-    const vendor = req.body.vendor;
-    const partNo = req.body.partNo;
-    const partDesc = req.body.partDesc
-    const cost = req.body.cost
 
-    try{
-        const search = 'SELECT * FROM users WHERE vendor = ? AND partno = ?  AND partdesc = ?"'
-        const newPart = 'INSERT INTO users (vendor, partno, partdesc, cost) VALUES (?, ?, ?, ?)'
-
-        const [results] = await db.query(search, [newPart]);
-
-             if(results.length !== 0) {
-                return res.status(409).json({ success: false, message: "Part already exists" })
-             } 
-
-            if (results.length === 0) {
-            
-                const createResults = await db.query(newPart, [vendor, partno, partdesc, cost]);
-
-                if (createResults.affectedRows >  0) {
-                    return res.status(201).json({success: true, message: "Part created"});
-
-                } else {
-                    console.error("Part not created")
-                    return res.status(500).json({ success: false, message: 'Error Creating new part, no rows effected'});
+    app.post('/parts', async(req, res) => {
+        const vendor = req.body.vendor;
+        const partNo = req.body.partNo;
+        const partDesc = req.body.partDesc
+        const cost = req.body.cost
+    
+        try{
+            const search = 'SELECT * FROM parts WHERE partno = ?'
+            const newPart = 'INSERT INTO parts (vendor, partno, partdesc, cost) VALUES (?, ?, ?, ?)'
+    
+            const [results] = await app.db.query(search, [partNo]);
+    
+                 if(results.length > 0) {
+                    return res.status(409).json({ success: false, message: "Part already exists" })
+                 } 
+    
+                if (results.length === 0) {
+                
+                    const createResults = await app.db.query(newPart, [vendor, partNo, partDesc, cost]);
+    
+                    if (createResults.affectedRows >  0) {
+                        return res.status(201).json({success: true, message: "Part created"});
+    
+                    } else {
+                        console.error("Part not created")
+                        return res.status(500).json({ success: false, message: 'Error Creating new part, no rows effected'});
+                    }
+                };
+            } catch (error) {
+                console.error("Part not created", error);
+                return res.status(500).json({ success: false, message: "Internal Server Error" });
                 }
-            };
-        } catch (error) {
-            console.error("Part not created", error);
-            return res.status(500).json({ success: false, message: "Internal Server Error" });
-            }
-    }   catch(err){
-        console.error("Server startup error:", err);
-    }
-})
+        }) 
+        
+
+
+}
 
 startServer();
     
