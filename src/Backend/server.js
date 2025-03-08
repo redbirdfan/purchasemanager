@@ -14,6 +14,7 @@ const corsOptions = {
     credentials: true
 }
 
+app.options('/parts', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -201,25 +202,27 @@ app.get("/parts", async (req, res) => {
 })
 
 
-    app.post('/parts', async(req, res) => {
+app.post("/parts", async(req, res) => {
         const vendor = req.body.vendor;
         const partNo = req.body.partNo;
         const partDesc = req.body.partDesc
-        const cost = req.body.cost
-    
+        const cost = parseFloat(req.body.cost)
+
+        console.log("From the frontend: " + req.body)
         try{
             const search = 'SELECT * FROM parts WHERE partno = ?'
             const newPart = 'INSERT INTO parts (vendor, partno, partdesc, cost) VALUES (?, ?, ?, ?)'
     
             const [results] = await app.db.query(search, [partNo]);
-    
+
+            console.log("Returned from search: " + results)
                  if(results.length > 0) {
                     return res.status(409).json({ success: false, message: "Part already exists" })
                  } 
     
                 if (results.length === 0) {
-                
-                    const createResults = await app.db.query(newPart, [vendor, partNo, partDesc, cost]);
+                    
+                    const createResults = await db.query(newPart, [vendor, partNo, partDesc, cost]);
     
                     if (createResults.affectedRows >  0) {
                         return res.status(201).json({success: true, message: "Part created"});

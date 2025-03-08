@@ -84,6 +84,7 @@ function PartDataBase() {
                         return;
                     } else {
                         try {
+                            console.log(partNo)
                                 const response = await fetch("http://localhost:5000/parts", {
                                     method: "POST",
                                     headers: {
@@ -92,11 +93,11 @@ function PartDataBase() {
                                     body: JSON.stringify({ vendor, partNo, partDesc, cost }),
                                 });
             
-                                
+                        console.log(response)                    
             
                         if (response.ok){
-                            
                             const data = await response.json();
+
                             console.log("New Part:" + data)
             
                         } else {
