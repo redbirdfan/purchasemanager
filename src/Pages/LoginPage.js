@@ -1,6 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 
 
@@ -34,7 +35,7 @@ function LoginPage() {
 
                 if (response.ok){
                     const token = data.token;
-                    localStorage.setItem('token', token)
+                    Cookies.set('authToken', token, { path: '/', httpOnly: true, expires: 2 });
                     navigate('/hub')
                     console.log("backend connection successful")
                     console.log(data)

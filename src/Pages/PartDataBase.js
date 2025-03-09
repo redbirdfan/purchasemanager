@@ -84,7 +84,6 @@ function PartDataBase() {
                         return;
                     } else {
                         try {
-                            console.log(partNo)
                                 const response = await fetch("http://localhost:5000/parts", {
                                     method: "POST",
                                     headers: {
@@ -98,7 +97,7 @@ function PartDataBase() {
                         if (response.ok){
                             const data = await response.json();
 
-                            console.log("New Part:" + data)
+                            console.log(data)
             
                         } else {
                             setErr("No response")
@@ -159,11 +158,11 @@ function PartDataBase() {
             <button onClick={clearSearch}>Clear Search</button>
             <div>
             {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
-                <div key = {index}>
-                    <p>{parts?.vendor}</p>
-                    <p>{parts?.partno}</p> 
-                    <p>{parts?.partdesc}</p>
-                    <p>{parts?.cost}</p>
+                <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.vendor}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partno}</p> 
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partdesc}</p>
+                    <p style={{marginLeft: '10px'}}>{parts?.cost}</p>
                  </div>
             ))}
             </div>

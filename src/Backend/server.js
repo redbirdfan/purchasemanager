@@ -70,7 +70,14 @@ app.post("/loginPage", async (req, res) => {
 
                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-            res.json({ token });
+                res.cookie('authToken', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 60* 60 * 1000,
+                })
+
+            res.sendStatus(200)
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
             }      
@@ -79,6 +86,30 @@ app.post("/loginPage", async (req, res) => {
         return res.status(500).json({success: "False", message: "Server error"})
     }
 });
+
+app.get('/profile', async (req, res) => {
+    console.log("Cookie", req.cookies)
+    const token = req.cookies.authToken;
+
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const [user] = await app.db.query('SELECT FirstName, LastName FROM users WHERE Username = ?', [decoded.Username])
+      
+      if (user.length > 0) {
+        res.json({success: true, user: user[0]})
+      } else {
+        res.status(404).json({success: false, message: 'User not found'
+        })
+      }
+    } catch (error) {
+        console.error("JWT Ver. Error:", error)
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+  });
 
 
 app.post("/NewAccount", async (req, res) => {
@@ -125,24 +156,24 @@ app.get('/vendor', async (req, res) => {
     
          
         try{
-            let search = 'SELECT * FROM vendor WHERE'
+            let search = 'SELECT * FROM vendor WHERE 1=1'
             
             const params = [];
 
             if (VendorName) {
-              search += ' AND TRIM(LOWER(VendorName)) = TRIM(LOWER(?))';
+              search += ' AND TRIM(LOWER(VendorName)) LIKE TRIM(LOWER(?))'
               params.push(VendorName);
             }
             if (Address) {
-              search += ' AND TRIM(Address) = TRIM(?)';
+              search += ' AND TRIM(LOWER(Address)) = TRIM(LOWER(?))'
               params.push(Address);
             }
             if (phone) {
-              search += ' AND TRIM(phone) = TRIM(?)';
+              search += ' AND TRIM(phone) = TRIM(?)'
               params.push(phone);
             }
             if (account) {
-              search += ' AND TRIM(account) = TRIM(?)';
+              search += ' AND TRIM(account) = TRIM(?)'
               params.push(account);
             }
         
@@ -222,9 +253,9 @@ app.post("/parts", async(req, res) => {
     
                 if (results.length === 0) {
                     
-                    const createResults = await db.query(newPart, [vendor, partNo, partDesc, cost]);
+                    const createPart = await db.query(newPart, [vendor, partNo, partDesc, cost]);
     
-                    if (createResults.affectedRows >  0) {
+                    if (createPart.affectedRows >  0) {
                         return res.status(201).json({success: true, message: "Part created"});
     
                     } else {
