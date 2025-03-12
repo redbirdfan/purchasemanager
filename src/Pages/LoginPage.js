@@ -23,7 +23,7 @@ function LoginPage() {
                 return;
             } else {
                 try {
-                        const response = await fetch("http://localhost:5000/loginPage", {
+                        const response = await fetch("/loginPage", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",

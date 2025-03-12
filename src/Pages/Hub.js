@@ -3,18 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline'
 
 function Hub() {
-    const [username, setUsername] = useState(null);
-    const [loading, setLoading] =useState(true)
-    const [err, setErr] =useState('')
+    const [firstName, setFirstName] = useState(null);
+    const [lastName, setLastName] = useState(null);
+    const [loading, setLoading] =useState(true);
+    const [err, setErr] =useState('');
 
     useEffect(() => {
         async function userProfile() {
             try {
-                const response =await fetch('http://localhost:5000/profile');
+                const response =await fetch('/profile');
                 if (response.ok) {
                     const data = await response.json();
-                    setUsername(data.Username)
-                    console.log(username)
+                    setFirstName(data.user.FirstName)
+                    setLastName(data.user.LastName)
+                    console.log(data.FirstName, data.LastName)
                     setLoading(false);
                     setErr('none')
                 } else {
@@ -55,7 +57,7 @@ function Hub() {
 
     return(
         <>
-            {loading === false && <p>{username}</p>}
+            {loading === false && <p>{firstName + " " + lastName}</p>}
             <div style={{display: "flex", alignItems: 'center',justifyContent: 'center'}}>
             <button onClick={startOrder} style={{width: 150, height: 150}} className="flex items-center">
                 New Order

@@ -22,7 +22,7 @@ function NewAccount() {
             return;
         } else {
             try {
-                    const response = await fetch("http://localhost:5000/NewAccount", {
+                    const response = await fetch("/NewAccount", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

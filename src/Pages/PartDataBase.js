@@ -50,7 +50,7 @@ function PartDataBase() {
                 searchFields.append("cost", cost)
             }
 
-            const response = await fetch(`http://localhost:5000/parts?${searchFields}`, {
+            const response = await fetch(`/parts?${searchFields}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function PartDataBase() {
                         return;
                     } else {
                         try {
-                                const response = await fetch("http://localhost:5000/parts", {
+                                const response = await fetch("/parts", {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",

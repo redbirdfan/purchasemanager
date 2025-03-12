@@ -11,7 +11,9 @@ const app = express();
 
 const corsOptions = {
     origin: "http://localhost:3000",
-    credentials: true
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    allowedHeaders: "Content-Type,Authorization",
 }
 
 app.options('/parts', cors(corsOptions));
@@ -68,16 +70,16 @@ app.post("/loginPage", async (req, res) => {
                     Username: storedUser,
                 };
 
-                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '3h' });
 
                 res.cookie('authToken', token, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'strict',
+                    secure: false,
+                    sameSite: 'lax',
                     maxAge: 60* 60 * 1000,
                 })
 
-            res.sendStatus(200)
+            res.json({message: "log in successful", token: token})
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
             }      
@@ -88,7 +90,7 @@ app.post("/loginPage", async (req, res) => {
 });
 
 app.get('/profile', async (req, res) => {
-    console.log("Cookie", req.cookies)
+
     const token = req.cookies.authToken;
 
     if (!token) {
@@ -96,9 +98,11 @@ app.get('/profile', async (req, res) => {
     }
   
     try {
+        console.log(jwt.verify(token, process.env.JWT_SECRET));
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const [user] = await app.db.query('SELECT FirstName, LastName FROM users WHERE Username = ?', [decoded.Username])
-      
+      console.log("I am decoded: " + decoded);
+      const [user] = await app.db.query('SELECT FirstName, LastName FROM users WHERE Username = ?', [Username])
+      console.log("query results:" +[user])
       if (user.length > 0) {
         res.json({success: true, user: user[0]})
       } else {
