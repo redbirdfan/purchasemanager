@@ -89,6 +89,11 @@ app.post("/loginPage", async (req, res) => {
     }
 });
 
+app.get('/logout', (req, res) => {
+    res.clearCookie('authToken', { httpOnly: true, path: '/' });
+    res.sendStatus(200);
+  });
+  
 app.get('/profile', async (req, res) => {
 
     const token = req.cookies.authToken;

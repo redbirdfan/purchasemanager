@@ -1,5 +1,5 @@
 import React from "react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 
@@ -12,6 +12,23 @@ function LoginPage() {
     const [err, setErr] = useState("");
  
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const clearAuthToken = async () => {
+            try {
+                const response = await fetch('/logout');
+                if (response.ok) {
+                    console.log('Auth token cleared.');
+                } else {
+                    console.error('Failed to clear auth token.');
+                }
+            } catch (error) {
+                console.error('Error clearing auth token:', error);
+            }
+        };
+
+        clearAuthToken();
+    }, []);
 
     const checkUser = async (e) => {
             e.preventDefault();

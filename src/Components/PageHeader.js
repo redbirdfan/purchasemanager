@@ -5,6 +5,10 @@ import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocume
 
 function PageHeader(){
 
+    function logOut() {
+        
+    }
+
     return(
         <> 
         <div style={{display: "flex", justifyContent:"center"}}>
@@ -13,6 +17,7 @@ function PageHeader(){
         <Link to={"/SearchOrder"} style={{marginRight: "30px", marginLeft: "30px"}}>Find Order</Link>
         <Link to={"/Vendors"} style={{marginRight: "30px", marginLeft: "30px"}}>Vendors</Link>
         <Link to={"/Receiving"} style={{marginRight: "30px", marginLeft: "30px"}}>Receiving</Link>
+        <button onClick={logOut}>Log Out</button>
         </div>
         </>
     )
