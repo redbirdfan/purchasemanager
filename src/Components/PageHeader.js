@@ -6,7 +6,7 @@ import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocume
 function PageHeader(){
 
     function logOut() {
-        
+                
     }
 
     return(
@@ -17,11 +17,11 @@ function PageHeader(){
         <Link to={"/SearchOrder"} style={{marginRight: "30px", marginLeft: "30px"}}>Find Order</Link>
         <Link to={"/Vendors"} style={{marginRight: "30px", marginLeft: "30px"}}>Vendors</Link>
         <Link to={"/Receiving"} style={{marginRight: "30px", marginLeft: "30px"}}>Receiving</Link>
-        <button onClick={logOut}>Log Out</button>
+        <Link to={"/loginPage"} style={{marginRight: "30px"}}>LogOut</Link>
         </div>
         </>
     )
 
 }
 
-export default PageHeader;
+export default PageHeader

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline'
+import Cookies from 'js-cookie';
 
 function Hub() {
     const [firstName, setFirstName] = useState(null);
@@ -11,7 +12,20 @@ function Hub() {
     useEffect(() => {
         async function userProfile() {
             try {
-                const response =await fetch('/profile');
+            const token = Cookies.get('authToken');
+            console.log("Token before fetch ", token)
+            if(!token){
+                setErr("No token found")
+                console.log(err)
+                setLoading(true)
+                return;
+            }
+                const response =await fetch('/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
                 if (response.ok) {
                     const data = await response.json();
                     setFirstName(data.user.FirstName)
