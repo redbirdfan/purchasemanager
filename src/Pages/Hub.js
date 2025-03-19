@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline'
+import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import Cookies from 'js-cookie';
+import { CircleStackIcon } from "@heroicons/react/24/outline";
 
 function Hub() {
     const [firstName, setFirstName] = useState(null);
@@ -12,8 +13,7 @@ function Hub() {
     useEffect(() => {
         async function userProfile() {
             try {
-            const token = Cookies.get('authToken');
-            console.log("Token before fetch ", token)
+            const token = Cookies.get("authToken")
             if(!token){
                 setErr("No token found")
                 console.log(err)
@@ -65,10 +65,13 @@ function Hub() {
         navigate('/Vendors')
     }
 
-    function gotToReceiving(){
+    function goToReceiving(){
         navigate('/Receiving')
     }
 
+    function gotToLoginPage(){
+        navigate('/loginPage')
+    }
     return(
         <>
             {loading === false && <p>{firstName + " " + lastName}</p>}
@@ -93,10 +96,16 @@ function Hub() {
                 <BookmarkSquareIcon className="h-5 w-5 mr-2" />        
                 </button>
             
-            <button onClick={gotToReceiving} style={{width: 150, height: 150}} className="flex items-center" >
+            <button onClick={goToReceiving} style={{width: 150, height: 150}} className="flex items-center" >
                 Receiving
                 <ClipboardDocumentCheckIcon className="h-5 w-5 mr-2/" />
                 </button>
+
+            <button onClick={gotToLoginPage} style={{width: 150, height: 150}} className="flex items-center" >
+                Logout
+                <XCircleIcon className="h-5 w-5 mr-2/" />
+                </button>
+                
             </div>
         </>
     )
