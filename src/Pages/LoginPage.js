@@ -52,7 +52,7 @@ function LoginPage() {
 
                 if (response.ok){
                     const token = data.token;
-                    Cookies.set('authToken', token, { path: '/', httpOnly: true, expires: 2 });
+                    Cookies.set('authToken', token, { path: '/', expires: 2 });
                     navigate('/hub')
                     console.log("backend connection successful")
                     console.log(data)
