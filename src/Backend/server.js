@@ -95,8 +95,9 @@ app.get('/logout', (req, res) => {
   });
   
 app.get('/profile', async (req, res) => {
-   
+    console.log("Calling /profile")
     const token = req.cookies.authToken;
+    console.log(token)
     if (!token) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -104,6 +105,8 @@ app.get('/profile', async (req, res) => {
     try {
         console.log(jwt.verify(token, process.env.JWT_SECRET));
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const username = decoded.Username
+      console.log("Username: ", username)
       const [user] = await app.db.query('SELECT FirstName, LastName FROM users WHERE Username = ?', [username])
       if (user.length > 0) {
         res.json({success: true, user: user[0]})
