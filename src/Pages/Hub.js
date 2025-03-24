@@ -76,7 +76,7 @@ function Hub() {
 
     return(
         <>
-            {loading === false && <p>{firstName + " " + lastName}</p>}
+            {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <div style={{display: "flex", alignItems: 'center',justifyContent: 'center'}}>
             <button onClick={startOrder} style={{width: 150, height: 150}} className="flex items-center">
                 New Order

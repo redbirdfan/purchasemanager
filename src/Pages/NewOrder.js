@@ -12,9 +12,9 @@ function NewOrder(){
     const [err, setErr] =useState('');
 
      useEffect(() => {
-            console.log("NO UseEffect called")
+            
             async function userProfile() {
-                console.log("NO userProfile running")
+                
                 try {
                     const response =await fetch('/profile', {
                         headers: {
@@ -63,7 +63,7 @@ function NewOrder(){
         
         <header>Place your order...</header>
         <body>
-        {loading === false && <p>{firstName + " " + lastName}</p>}
+        {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <header>
             <PageHeader />
             </header>

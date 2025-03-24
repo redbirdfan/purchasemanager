@@ -154,7 +154,7 @@ function PartDataBase() {
     
     return (
         <>
-        {loading === false && <p>{firstName + " " + lastName}</p>}
+        {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
         <header><PageHeader /></header>
             <h1>What are we looking for today?</h1>
 

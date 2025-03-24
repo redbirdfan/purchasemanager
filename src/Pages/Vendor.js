@@ -101,7 +101,7 @@ function Vendor(){
     return (
         <>
         <div>
-            {loading === false && <p>{firstName + " " + lastName}</p>}  
+            {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}  
             <PageHeader />
         </div>
         <input  

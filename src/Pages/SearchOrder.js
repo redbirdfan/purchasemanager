@@ -54,7 +54,7 @@ function SearchOrder() {
 
     return (
             <>
-            {loading === false && <p>{firstName + " " + lastName}</p>}
+            {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <header><PageHeader /></header>
             <input type = "text" placeholder ="Vendor"/>
  
