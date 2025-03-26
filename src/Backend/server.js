@@ -243,10 +243,12 @@ app.get("/parts", async (req, res) => {
 
 
 app.post("/parts", async(req, res) => {
+
+        console.log("post for /parts called")
         const vendor = req.body.vendor;
         const partNo = req.body.partNo;
         const partDesc = req.body.partDesc
-        const cost = parseFloat(req.body.cost)
+        const cost = req.body.cost;
 
         console.log("From the frontend: " + req.body)
         try{
@@ -262,7 +264,7 @@ app.post("/parts", async(req, res) => {
     
                 if (results.length === 0) {
                     
-                    const createPart = await db.query(newPart, [vendor, partNo, partDesc, cost]);
+                    const createPart = await app.db.query(newPart, [vendor, partNo, partDesc, cost]);
     
                     if (createPart.affectedRows >  0) {
                         return res.status(201).json({success: true, message: "Part created"});

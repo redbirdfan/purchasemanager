@@ -122,6 +122,7 @@ function PartDataBase() {
                         return;
                     } else {
                         try {
+                                console.log("trying to post")
                                 const response = await fetch("/parts", {
                                     method: "POST",
                                     headers: {

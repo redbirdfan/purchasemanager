@@ -14,9 +14,7 @@ function SearchOrder() {
     const [err, setErr] =useState('');
     
         useEffect(() => {
-            console.log("UseEffect called")
             async function userProfile() {
-                console.log("userProfile running")
                 try {
                     const response =await fetch('/profile', {
                         headers: {
@@ -28,23 +26,18 @@ function SearchOrder() {
                         const data = await response.json();
                         setFirstName(data.user.FirstName)
                         setLastName(data.user.LastName)
-                        console.log(data.FirstName, data.LastName)
                         setLoading(false);
-                        console.log("Loading set to: ", false)
                         setErr('none')
                     } else {
                         setErr("failed to find user")
                         setLoading(true)
-                        console.log("Set loading to: ", true)
                     }
                 }catch(err) {
                     setErr("Network Error")
                     setLoading(true)
-                    console.log("Loading set to: ", true)
                 }
                 }
                 userProfile();
-                console.log("userProfile function called")
             }, []);
     
 
