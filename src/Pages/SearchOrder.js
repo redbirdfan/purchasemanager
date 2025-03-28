@@ -8,8 +8,7 @@ function SearchOrder() {
     const [username, setUsername] = useState("")
     const [orderDate, setDate] = useState(""); 
     const [vendor, setVendor] = useState("");
-    const [received, setReceived] = useState("")
-
+    
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [loading, setLoading] =useState(true);
@@ -49,40 +48,40 @@ function SearchOrder() {
     const findOrder = async (e) => {
         e.preventDefault();
         setErr("")
-        console.log("Receiving status: " + received)
+
         try {
-            const searchFields = new URLSearchParams()
-            console.log("Receiving status: " + received)
+            console.log("CAlling findOrder")
+            const searchOrders = new URLSearchParams()
             
             if(orderNumber){
-                searchFields.append("ordernumber", orderNumber)
+                searchOrders.append("ordernumber", orderNumber)
             }
 
             if(username){
-                searchFields.append("username", username)
+                searchOrders.append("username", username)
             }
             
             if(orderDate){
-                searchFields.append("order_date", orderDate)
+                searchOrders.append("order_date", orderDate)
             }
 
             if(vendor){
-                searchFields.append("vendor", vendor)
+                searchOrders.append("vendor", vendor)
             }
 
-            if(received) {
-                searchFields.append("received", received)
-            }
+            console.log("Looking for: ", searchOrders)
 
-            const response = await fetch(`/orders?${searchFields}`, {
+            const response = await fetch(`/orders?${searchOrders}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
+                console.log("Calling for get orders")
+
             const responseData = await response.json()
             setData(responseData)
-
+            console.log("Response Date", responseData)
             if (response.ok){
                     console.log("backend connection successful")
                     console.log(responseData)
@@ -113,12 +112,12 @@ function SearchOrder() {
             <button onClick={findOrder}>Find Order</button>
 
             <div>
-            {data && data.data.length > 0 && data.data.map((parts, index) => (
+            {data && data.data.length > 0 && data.data.map((order, index) => (
                 <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.username}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.orderNumber}</p> 
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.orderDate}</p>
-                    <p style={{marginLeft: '10px'}}>{parts?.received}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.username}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.orderNumber}</p> 
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.orderDate}</p>
+                    <p style={{marginLeft: '10px'}}>{order?.received}</p>
             </div>
             ))}
             </div>
