@@ -281,6 +281,52 @@ app.post("/parts", async(req, res) => {
         }) 
         
 
+        app.get("/orders", async (req, res) => {
+            const {orderNumber, username, vendor, received, order_date} = req.query;
+            console.log("Order search: ", req.query)
+        
+            try { 
+                let search = 'SELECT * FROM parts WHERE 1=1'
+                    
+                const params = [];
+        
+                    if (orderNumber) {
+                      search += ' AND ordernumber = ?';
+                      params.push(orderNumber);
+                    }
+                    if (username) {
+                      search += ' AND username = TRIM(?)';
+                      params.push(username);
+                    }
+                    if (vendor) {
+                      search += ' AND vendor = TRIM(?)';
+                      params.push(vendor);
+                    }
+                    if (received) {
+                      search += ' AND received = ?';
+                      params.push(received);
+                    }
+                    if(order_date) {
+                        search += ' AND order_date = ?'
+                        params.push(order_date)
+                    }
+
+                    console.log("Searching: " + params)
+                
+                const [results] = await app.db.query(search, params)
+                    console.log([results]);
+                if(results.length > 0) {
+                    return res.status(200).json({success: true, message: "Order found", data: results});
+            } else {
+                console.error("Order not found");
+                return res.status(404).json({ success: false, message: "Order not found"})
+                }
+            } catch (err) {
+                console.error("Issue Searching:", err)
+                return res.status(500).json({ success: false, message: "Internal server error" });
+            }
+        })
+        
 
 }
 

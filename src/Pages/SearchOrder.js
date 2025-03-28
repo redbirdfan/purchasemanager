@@ -4,15 +4,20 @@ import PageHeader from "../Components/PageHeader";
 
 function SearchOrder() {
 
-    const [orderNo, setOrderNo] = useState("")
+    const [orderNumber, setOrderNumber] = useState("")
     const [username, setUsername] = useState("")
-    const [date, setDate] = useState(""); 
+    const [orderDate, setDate] = useState(""); 
     const [vendor, setVendor] = useState("");
+    const [received, setReceived] = useState("")
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [loading, setLoading] =useState(true);
-    const [err, setErr] =useState('');
-    
+    const [err, setErr] = useState('');
+
+    const [data, setData] = useState();
+
+
         useEffect(() => {
             async function userProfile() {
                 try {
@@ -41,22 +46,85 @@ function SearchOrder() {
             }, []);
     
 
-    function finderOrder(){
-            //call to database to search for existing Orders
-    }
+    const findOrder = async (e) => {
+        e.preventDefault();
+        setErr("")
+        console.log("Receiving status: " + received)
+        try {
+            const searchFields = new URLSearchParams()
+            console.log("Receiving status: " + received)
+            
+            if(orderNumber){
+                searchFields.append("ordernumber", orderNumber)
+            }
+
+            if(username){
+                searchFields.append("username", username)
+            }
+            
+            if(orderDate){
+                searchFields.append("order_date", orderDate)
+            }
+
+            if(vendor){
+                searchFields.append("vendor", vendor)
+            }
+
+            if(received) {
+                searchFields.append("received", received)
+            }
+
+            const response = await fetch(`/orders?${searchFields}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const responseData = await response.json()
+            setData(responseData)
+
+            if (response.ok){
+                    console.log("backend connection successful")
+                    console.log(responseData)
+                } else {
+                    setErr("No response")
+                    console.log(err);
+                    setData(null)  
+                }   
+
+            }
+            catch (err) {
+            console.log("ERROR", err);
+            }
+        }
+            
 
     return (
             <>
             {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <header><PageHeader /></header>
-            <input type = "text" placeholder ="Vendor"/>
- 
-        {/*will build out data to be shown with the order details, parts order, and items on order*/}
+            <input 
+                type = "text" 
+                placeholder ="Order Number"
+                value = { orderNumber }
+                onChange={(e) => setOrderNumber(e.target.value)}
+            />
+            
+            <button onClick={findOrder}>Find Order</button>
+
+            <div>
+            {data && data.data.length > 0 && data.data.map((parts, index) => (
+                <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.username}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.orderNumber}</p> 
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.orderDate}</p>
+                    <p style={{marginLeft: '10px'}}>{parts?.received}</p>
+            </div>
+            ))}
+            </div>
         </>
-
-    )
     
-
+        )
 }
 
 export default SearchOrder;
