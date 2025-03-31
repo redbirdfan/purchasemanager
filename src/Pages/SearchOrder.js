@@ -112,12 +112,13 @@ function SearchOrder() {
             <button onClick={findOrder}>Find Order</button>
 
             <div>
-            {data && data.data.length > 0 && data.data.map((order, index) => (
+            {data && data.data.length > 0 && data.data.map((orders, index) => (
                 <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.username}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.orderNumber}</p> 
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{order?.orderDate}</p>
-                    <p style={{marginLeft: '10px'}}>{order?.received}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.username}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.ordernumber}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</p> 
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.order_date}</p>
+                    <p style={{marginLeft: '10px'}}>{orders?.received}</p>
             </div>
             ))}
             </div>

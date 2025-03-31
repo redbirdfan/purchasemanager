@@ -286,7 +286,7 @@ app.post("/parts", async(req, res) => {
             console.log("Order search: ", req.query)
         
             try { 
-                let search = 'SELECT * FROM parts WHERE 1=1'
+                let search = 'SELECT * FROM orders WHERE 1=1'
                     
                 const params = [];
         
