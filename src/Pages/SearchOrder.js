@@ -8,6 +8,7 @@ function SearchOrder() {
     const [username, setUsername] = useState("")
     const [orderDate, setDate] = useState(""); 
     const [vendor, setVendor] = useState("");
+    const [received, setReceived] = useState("NO")
     
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -67,6 +68,10 @@ function SearchOrder() {
 
             if(vendor){
                 searchOrders.append("vendor", vendor)
+            }
+
+            if(received){
+                searchOrders.append("order_status", received)
             }
 
             console.log("Looking for: ", searchOrders)
@@ -130,7 +135,7 @@ function formatDate(dateString) {
                     <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.ordernumber}</p>
                     <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</p> 
                     <p style={{marginRight: '80px', marginLeft: '10px'}}>{formatDate(orders?.order_date)}</p>
-                    <p style={{marginLeft: '10px'}}>{orders?.received}</p>
+                    <p style={{marginLeft: '10px'}}>{orders?.order_status}</p>
             </div>
             ))}
             </div>

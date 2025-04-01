@@ -282,7 +282,7 @@ app.post("/parts", async(req, res) => {
         
 
         app.get("/orders", async (req, res) => {
-            const {orderNumber, username, vendor, order_date} = req.query;
+            const {orderNumber, username, vendor, order_date, order_status} = req.query;
             console.log("Order search: ", req.query)
         
             try { 
@@ -294,23 +294,27 @@ app.post("/parts", async(req, res) => {
                       search += ' AND ordernumber = ?';
                       params.push(orderNumber);
                     }
+
                     if (username) {
                       search += ' AND LOWER(username) = TRIM(LOWER(?))';
                       params.push(username);
                     }
+
                     if (vendor) {
                       search += ' AND vendor = TRIM(?)';
                       params.push(vendor);
                     }
-                   {/*} if (received) {
-                      search += ' AND LOWER(received) = LOWER(?)';
-                      params.push(received);
-                    }*/}
+
                     if(order_date) {
                         search += ' AND order_date = ?'
                         params.push(order_date)
                     }
 
+                    if (order_status) {
+                        search += ' AND LOWER(order_status) = LOWER(?)';
+                        params.push(order_status);
+                      }
+                      
                     console.log("Searching: " + params)
                 
                 const [results] = await app.db.query(search, params)
