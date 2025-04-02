@@ -314,7 +314,7 @@ app.post("/parts", async(req, res) => {
                         search += ' AND LOWER(order_status) = LOWER(?)';
                         params.push(order_status);
                       }
-                      
+
                     console.log("Searching: " + params)
                 
                 const [results] = await app.db.query(search, params)
@@ -330,6 +330,19 @@ app.post("/parts", async(req, res) => {
                 return res.status(500).json({ success: false, message: "Internal server error" });
             }
         })
+
+    app.get("/vendorList", async(req, res) => {
+         try { 
+                let search = 'SELECT DISTINCT TRIM(vendor) AS vending FROM parts'
+                const results = await app.db.query(search)
+                console.log("Vendor list: ", results)
+                const vendorList = results.map(item => item.vending);
+                res.json(vendorList);
+    }catch (err) {
+        console.error("Issue Searching:", err)
+        return res.status(500).json({ success: false, message: "Internal server error" });
+        }
+    });
         
 
 }

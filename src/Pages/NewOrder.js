@@ -8,45 +8,70 @@ function NewOrder(){
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [vendorList, setVendorList] = useState([]);
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
 
-     useEffect(() => {
+    useEffect(() => {
+        async function fetchData() {
+          try {
+            // Fetch user profile
+            const profileResponse = await fetch('/profile', {
+              headers: {
+                credentials: 'include',
+              },
+            });
+            console.log("fetch /profile: ", profileResponse);
+            if (profileResponse.ok) {
+              const profileData = await profileResponse.json();
+              setFirstName(profileData.user.FirstName);
+              setLastName(profileData.user.LastName);
+              console.log(profileData.FirstName, profileData.LastName);
+            } else {
+              setErr("failed to find user");
+              setLoading(true);
+              console.log("Set loading to: ", true);
+            }
+    
             
-            async function userProfile() {
-                
-                try {
-                    const response =await fetch('/profile', {
-                        headers: {
-                            credentials: 'include',
-                        }
-                    });
-                    console.log("fetch /profile: ", response)
-                    if (response.ok) {
-                        const data = await response.json();
-                        setFirstName(data.user.FirstName)
-                        setLastName(data.user.LastName)
-                        console.log(data.FirstName, data.LastName)
-                        setLoading(false);
-                        console.log("Loading set to: ", false)
-                        setErr('none')
-                    } else {
-                        setErr("failed to find user")
-                        setLoading(true)
-                        console.log("Set loading to: ", true)
-                    }
-                }catch(err) {
-                    setErr("Network Error")
-                    setLoading(true)
-                    console.log("Loading set to: ", true)
-                }
-                }
-                userProfile();
-                console.log("userProfile function called")
-            }, []);
+            const vendorResponse = await fetch('/vendorList', {
+                headers:{
+                    credentials: 'include',
+                },
+            });
+            console.log("/vendorList: ", vendorResponse)
+            if (vendorResponse.ok) {
+                    console.log("VendorResponse OK")
+              const vendorData = await vendorResponse.json();
+                    console.log(vendorData)
+              const foundVendors = vendorData.map(item => item['vending']);
+                    console.log("Vendor List: ", foundVendors)
+            } else {
+              console.error("Failed to fetch vendors");
+            }
+    
+            setLoading(false);
+            console.log("Loading set to: ", false);
+            setErr('none');
+          } catch (error) {
+            setErr("Network Error");
+            setLoading(true);
+            console.log("Loading set to: ", true);
+            console.error("Error fetching data:", error);
+          }
+        }
+    
+        fetchData();
+        console.log("fetchData function called");
+      }, []);
+    
     
 
     const navigate=useNavigate();
+
+    const createVendorList = async (e) => {
+        
+    }
 
     
     
@@ -67,7 +92,14 @@ function NewOrder(){
             <header>
             <PageHeader />
             </header>
-                <input type="text" placeholder="Vendor"/> {/*required to ensure part# can only be pulled from selected vendor*/}
+                <label for = "vendor">Choose a Vendor</label>
+                <select id="vendor">
+                    {vendorList.map((vendor) => (
+                        <option  key={vendor.vendor} value = {vendor.vendor}>
+                            {vendor.vendor}
+                        </option>
+                    ))}
+                </select>
                 <input type="text" placeholder="Part#"/> {/*You can either type the part# in if known or scroll dropdown*/}
                 <button onClick={addToOrder}>Add to order</button>
                 
