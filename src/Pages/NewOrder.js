@@ -43,9 +43,9 @@ function NewOrder(){
             if (vendorResponse.ok) {
                     console.log("VendorResponse OK")
               const vendorData = await vendorResponse.json();
-                    console.log(vendorData)
-              const foundVendors = vendorData.map(item => item['vending']);
-                    console.log("Vendor List: ", foundVendors)
+                    console.log("vendor data before mapping:" , vendorData)
+              const vendorList = vendorData.map(item => item['vending']);
+                    console.log("Vendor List: ", vendorList)
             } else {
               console.error("Failed to fetch vendors");
             }
@@ -93,10 +93,11 @@ function NewOrder(){
             <PageHeader />
             </header>
                 <label for = "vendor">Choose a Vendor</label>
-                <select id="vendor">
-                    {vendorList.map((vendor) => (
-                        <option  key={vendor.vendor} value = {vendor.vendor}>
-                            {vendor.vendor}
+                <br></br>
+                <select id="vendor" style={{ width: '200px' }}>
+                    {vendorData.map((vendor) => (
+                        <option key={vendor.vending} value = {vendor.vending}>
+                            {vendor.vending}
                         </option>
                     ))}
                 </select>

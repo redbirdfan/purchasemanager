@@ -335,16 +335,13 @@ app.post("/parts", async(req, res) => {
          try { 
                 let search = 'SELECT DISTINCT TRIM(vendor) AS vending FROM parts'
                 const results = await app.db.query(search)
-                console.log("Vendor list: ", results)
-                const vendorList = results.map(item => item.vending);
+                const vendorList = results[0]
                 res.json(vendorList);
-    }catch (err) {
-        console.error("Issue Searching:", err)
-        return res.status(500).json({ success: false, message: "Internal server error" });
-        }
-    });
-        
-
+            }catch (err) {
+                console.error("Issue Searching:", err)
+                return res.status(500).json({ success: false, message: "Internal server error" });
+                }
+        });
 }
 
 startServer();
