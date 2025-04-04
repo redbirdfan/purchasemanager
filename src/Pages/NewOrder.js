@@ -54,7 +54,7 @@ function NewOrder(){
                 return 0; 
             });
 
-              setVendorList(vendorData);
+              setVendorList(sortedVendorData);
                     
             } else {
               console.error("Failed to fetch vendors");
