@@ -332,6 +332,7 @@ app.post("/parts", async(req, res) => {
         })
 
     app.get("/vendorList", async(req, res) => {
+        console.log("vendor list has been called by the frontend")
          try { 
                 let search = 'SELECT DISTINCT TRIM(vendor) AS vending FROM parts'
                 const results = await app.db.query(search)
@@ -342,6 +343,24 @@ app.post("/parts", async(req, res) => {
                 return res.status(500).json({ success: false, message: "Internal server error" });
                 }
         });
+
+    app.get("/partsList", async(req, res) => {
+        console.log("part list backend called")
+        try{ 
+            let search = 'SELECT partno FROM parts'
+            const results = await app.db.query(search)
+            const partsList = results [0]
+            res.json(partsList);
+            console.log(partsList)
+            console.log("PartsList call has been made")
+        } catch (err) {
+        console.error("Issue searching: ", err)
+        return res.status(500).json({success: false, message: "Internal server error"});
+            }
+        });
+
+
+
 }
 
 startServer();

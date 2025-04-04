@@ -9,13 +9,16 @@ function NewOrder(){
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [vendorList, setVendorList] = useState([]);
+    const [vendor, setVendor] =useState('');
+    const [partsList, setPartsList] = useState([]);
+    const [partno, setPartno] = useState();
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
+
 
     useEffect(() => {
         async function fetchData() {
           try {
-            // Fetch user profile
             const profileResponse = await fetch('/profile', {
               headers: {
                 credentials: 'include',
@@ -33,7 +36,7 @@ function NewOrder(){
               console.log("Set loading to: ", true);
             }
     
-            
+
             const vendorResponse = await fetch('/vendorList', {
                 headers:{
                     credentials: 'include',
@@ -59,7 +62,41 @@ function NewOrder(){
             } else {
               console.error("Failed to fetch vendors");
             }
-    
+
+            async function fetchParts(selectedVendor) {
+              if (selectedVendor) {
+                  try {
+                      const partResponse = await fetch(`/partsList?vendor=${selectedVendor}`, { //Pass vendor as query parameter
+                          headers: {
+                              credentials: 'include',
+                          },
+                      });
+      
+                      if (partResponse.ok) {
+                          const partData = await partResponse.json();
+                          const sortedPartData = [...partData].sort((a, b) => {
+                              const nameA = a.partnumber;
+                              const nameB = b.partnumber;
+                              if (nameA < nameB) {
+                                  return -1;
+                              }
+                              if (nameA > nameB) {
+                                  return 1;
+                              }
+                              return 0;
+                          });
+      
+                          setPartsList(partData);
+                          console.log(partsList);
+                      } else {
+                          console.error("Failed to fetch parts");
+                      }
+                  } catch (error) {
+                      console.error("Error fetching parts:", error);
+                  }
+              }
+          }
+      
             setLoading(false);
             console.log("Loading set to: ", false);
             setErr('none');
@@ -75,9 +112,53 @@ function NewOrder(){
         console.log("fetchData function called");
       }, []);
     
-    
+      const handleVendorChange = (event) => {
+        const selectedVendor = event.target.value;
+        setVendor(selectedVendor);
+        setPartsList([]); 
+        console.log("Selected vendor is: ", selectedVendor);
+        findParts(selectedVendor);
+      };
 
-    const navigate=useNavigate();    
+      async function findParts(selectedVendor) {
+        if (selectedVendor) {
+            try {
+                const partResponse = await fetch(`/partsList?vendor=${selectedVendor}`, { 
+                    headers: {
+                        credentials: 'include',
+                    },
+                });
+
+                if (partResponse.ok) {
+                    const partData = await partResponse.json();
+                    const sortedPartData = [...partData].sort((a, b) => {
+                        const nameA = a.partnumber;
+                        const nameB = b.partnumber;
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    setPartsList(partData);
+                    console.log(partsList);
+                } else {
+                    console.error("Failed to fetch parts");
+                }
+            } catch (error) {
+                console.error("Error fetching parts:", error);
+            }
+        }
+    }
+
+    const handlePartnoChange = (event) =>{
+      setPartno(event.target.value);
+      console.log("Selected partno: ", event.target.value);
+    }
+
     
     function addToOrder(){
 
@@ -97,7 +178,7 @@ function NewOrder(){
             <PageHeader />
             <br></br>
             </header>
-                <select id="vendor" style={{ width: '200px' }}>
+                <select id="vendor" style={{ width: '200px' }} onChange={{handleVendorChange}} value={vendor}>
                 <option value="">Select a Vendor</option>
                     {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
@@ -105,14 +186,18 @@ function NewOrder(){
                         </option>
                     ))}
                 </select>
-
-
-                <input type="text" placeholder="Part#"/> {/*You can either type the part# in if known or scroll dropdown*/}
-                <button onClick={addToOrder}>Add to order</button>
                 
-            {/*//Once selected information will be displayed in order as it is building.
-        //Displayed parts will go here.*/}
-
+                <select id="partno" style={{width: '200px'}} onChange={{handlePartnoChange}} value={partno}>
+                <option value="">Part #</option>
+                    {partsList.map((parts) => (
+                        <option key={parts.partno} value = {parts.partno}>
+                            {parts.partno}
+                        </option>
+                    ))}
+                </select>
+                    
+                <button onClick={addToOrder}>Add to order</button>
+             
         <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
         </body>
         </>
