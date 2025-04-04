@@ -77,13 +77,7 @@ function NewOrder(){
     
     
 
-    const navigate=useNavigate();
-
-    const createVendorList = async (e) => {
-        
-    }
-
-    
+    const navigate=useNavigate();    
     
     function addToOrder(){
 
@@ -101,16 +95,18 @@ function NewOrder(){
         {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <header>
             <PageHeader />
+            <br></br>
             </header>
-                <label for = "vendor">Choose a Vendor</label>
-                <br></br>
-                <select placeholder='vendor' id="vendor" style={{ width: '200px' }}>
+                <select id="vendor" style={{ width: '200px' }}>
+                <option value="">Select a Vendor</option>
                     {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
                             {vendor.vending}
                         </option>
                     ))}
                 </select>
+
+
                 <input type="text" placeholder="Part#"/> {/*You can either type the part# in if known or scroll dropdown*/}
                 <button onClick={addToOrder}>Add to order</button>
                 
