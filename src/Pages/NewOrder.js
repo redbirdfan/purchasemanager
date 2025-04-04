@@ -39,13 +39,23 @@ function NewOrder(){
                     credentials: 'include',
                 },
             });
-            console.log("/vendorList: ", vendorResponse)
+        
             if (vendorResponse.ok) {
-                    console.log("VendorResponse OK")
               const vendorData = await vendorResponse.json();
-                    console.log("vendor data before mapping:" , vendorData)
-              const vendorList = vendorData.map(item => item['vending']);
-                    console.log("Vendor List: ", vendorList)
+              const sortedVendorData = [...vendorData].sort((a, b) => {
+                const nameA = a.vending.toUpperCase();
+                const nameB = b.vending.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0; 
+            });
+
+              setVendorList(vendorData);
+                    
             } else {
               console.error("Failed to fetch vendors");
             }
@@ -94,8 +104,8 @@ function NewOrder(){
             </header>
                 <label for = "vendor">Choose a Vendor</label>
                 <br></br>
-                <select id="vendor" style={{ width: '200px' }}>
-                    {vendorData.map((vendor) => (
+                <select placeholder='vendor' id="vendor" style={{ width: '200px' }}>
+                    {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
                             {vendor.vending}
                         </option>
