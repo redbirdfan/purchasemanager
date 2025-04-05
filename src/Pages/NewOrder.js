@@ -24,7 +24,9 @@ function NewOrder(){
                 credentials: 'include',
               },
             });
+            
             console.log("fetch /profile: ", profileResponse);
+
             if (profileResponse.ok) {
               const profileData = await profileResponse.json();
               setFirstName(profileData.user.FirstName);
@@ -45,6 +47,7 @@ function NewOrder(){
         
             if (vendorResponse.ok) {
               const vendorData = await vendorResponse.json();
+
               const sortedVendorData = [...vendorData].sort((a, b) => {
                 const nameA = a.vending.toUpperCase();
                 const nameB = b.vending.toUpperCase();
@@ -58,44 +61,37 @@ function NewOrder(){
             });
 
               setVendorList(sortedVendorData);
+        
+            if(vendor){
+
+                const fetchParts = await fetch("/partsList", {
+                    header:{
+                        credentials: "include",
+                    }
+                    })
+                     
                     
+                    if(fetchParts.ok){
+                            const partsData = await fetchParts.json
+        
+                            
+                      const sortedPartsData = [...partsData].sort((a, b) => {
+                        if (a < b) {
+                            return -1;
+                        }
+                        if (a > b) {
+                            return 1;
+                        }
+                        return 0; 
+                    });
+                        }
+                    }
+                    
+                    setPartsList(sortedPartsData)
+
             } else {
               console.error("Failed to fetch vendors");
             }
-
-            async function fetchParts(selectedVendor) {
-              if (selectedVendor) {
-                  try {
-                      const partResponse = await fetch(`/partsList?vendor=${selectedVendor}`, { //Pass vendor as query parameter
-                          headers: {
-                              credentials: 'include',
-                          },
-                      });
-      
-                      if (partResponse.ok) {
-                          const partData = await partResponse.json();
-                          const sortedPartData = [...partData].sort((a, b) => {
-                              const nameA = a.partnumber;
-                              const nameB = b.partnumber;
-                              if (nameA < nameB) {
-                                  return -1;
-                              }
-                              if (nameA > nameB) {
-                                  return 1;
-                              }
-                              return 0;
-                          });
-      
-                          setPartsList(partData);
-                          console.log(partsList);
-                      } else {
-                          console.error("Failed to fetch parts");
-                      }
-                  } catch (error) {
-                      console.error("Error fetching parts:", error);
-                  }
-              }
-          }
       
             setLoading(false);
             console.log("Loading set to: ", false);
@@ -107,52 +103,24 @@ function NewOrder(){
             console.error("Error fetching data:", error);
           }
         }
-    
+
         fetchData();
         console.log("fetchData function called");
       }, []);
+
+       
+
     
-      const handleVendorChange = (event) => {
-        const selectedVendor = event.target.value;
-        setVendor(selectedVendor);
-        setPartsList([]); 
-        console.log("Selected vendor is: ", selectedVendor);
-        findParts(selectedVendor);
-      };
+        const handleVendorChange = (event) => {
+            console.log("Vendor handler is being called")
+            event.stopPropagation()
+            const selectedVendor = event.target.value;
+            setVendor(selectedVendor);
+            console.log("handleVendorChange selected vendor is: ", selectedVendor);
+            partsResponse(vendor);
+        };
+        
 
-      async function findParts(selectedVendor) {
-        if (selectedVendor) {
-            try {
-                const partResponse = await fetch(`/partsList?vendor=${selectedVendor}`, { 
-                    headers: {
-                        credentials: 'include',
-                    },
-                });
-
-                if (partResponse.ok) {
-                    const partData = await partResponse.json();
-                    const sortedPartData = [...partData].sort((a, b) => {
-                        const nameA = a.partnumber;
-                        const nameB = b.partnumber;
-                        if (nameA < nameB) {
-                            return -1;
-                        }
-                        if (nameA > nameB) {
-                            return 1;
-                        }
-                        return 0;
-                    });
-
-                    setPartsList(partData);
-                    console.log(partsList);
-                } else {
-                    console.error("Failed to fetch parts");
-                }
-            } catch (error) {
-                console.error("Error fetching parts:", error);
-            }
-        }
-    }
 
     const handlePartnoChange = (event) =>{
       setPartno(event.target.value);
@@ -172,13 +140,13 @@ function NewOrder(){
         <>
         
         <header>Place your order...</header>
-        <body>
+        <div>
         {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
             <header>
             <PageHeader />
             <br></br>
             </header>
-                <select id="vendor" style={{ width: '200px' }} onChange={{handleVendorChange}} value={vendor}>
+                <select id="vendor" style={{ width: '200px' }} onChange={ handleVendorChange } value={ vendor }>
                 <option value="">Select a Vendor</option>
                     {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
@@ -186,8 +154,9 @@ function NewOrder(){
                         </option>
                     ))}
                 </select>
+              
                 
-                <select id="partno" style={{width: '200px'}} onChange={{handlePartnoChange}} value={partno}>
+                <select id="partno" style={{width: '200px'}} onChange={ handlePartnoChange } value={ partno }>
                 <option value="">Part #</option>
                     {partsList.map((parts) => (
                         <option key={parts.partno} value = {parts.partno}>
@@ -199,7 +168,7 @@ function NewOrder(){
                 <button onClick={addToOrder}>Add to order</button>
              
         <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
-        </body>
+        </div>
         </>
     )
 }
