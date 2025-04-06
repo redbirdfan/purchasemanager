@@ -345,15 +345,15 @@ app.post("/parts", async(req, res) => {
         });
 
     app.get("/partsList", async(req, res) => {
-        const {vendor} = req.query
+        const { vendor } = req.query
         console.log("PartsList search: " , req.query)
         console.log("part list backend called")
         try{ 
             let search = 'SELECT partno FROM parts WHERE vendor = ?'
-            const results = await app.db.query(search)
+            const results = await app.db.query(search, [vendor])
             const partsList = results [0]
             res.json(partsList);
-            console.log(partsList)
+            console.log("Line 357: ", partsList)
             console.log("PartsList call has been made")
         } catch (err) {
         console.error("Issue searching: ", err)

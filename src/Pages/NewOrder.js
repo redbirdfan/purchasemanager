@@ -80,7 +80,7 @@ function NewOrder(){
        
 
     
-        const handleVendorChange = (event) => {
+        const handleVendorChange = async (event) => {
             console.log("Vendor handler is being called")
             event.stopPropagation()
             const selectedVendor = event.target.value;
@@ -89,15 +89,18 @@ function NewOrder(){
 
             if (selectedVendor) {
               console.log("Launching fetchparts for selectedVendor existing")
+              console.log(selectedVendor)
+
+              const searchParts = new URLSearchParams({vendor: selectedVendor})
               try {
-                  const fetchParts = fetch("/partsList", { 
+                  const fetchParts = await fetch(`/partsList?${searchParts.toString()}`, { 
                       headers: {
                           credentials: "include",
                       },
                   });
-  
                   if (fetchParts.ok) {
-                      const partsData = fetchParts.json(); 
+                      const partsData = await fetchParts.json(); 
+                      console.log(partsData)
                       const sortedPartsData = [...partsData].sort((a, b) => {
                           if (a.partno < b.partno) { 
                               return -1;
@@ -165,7 +168,8 @@ function NewOrder(){
                         </option>
                     ))}
                 </select>
-                    
+
+                                    
                 <button onClick={addToOrder}>Add to order</button>
              
         <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
