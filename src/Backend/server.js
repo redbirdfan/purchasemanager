@@ -349,7 +349,7 @@ app.post("/parts", async(req, res) => {
         console.log("PartsList search: " , req.query)
         console.log("part list backend called")
         try{ 
-            let search = 'SELECT partno FROM parts WHERE vendor = ?'
+            let search = 'SELECT * FROM parts WHERE vendor = ?'
             const results = await app.db.query(search, [vendor])
             const partsList = results [0]
             res.json(partsList);
@@ -361,7 +361,22 @@ app.post("/parts", async(req, res) => {
             }
         });
 
-
+        app.get("/partsDesc", async(req, res) => {
+            const { selectedPart } = req.query
+            console.log("PartsDesc search: " , req.query)
+            console.log("part desc backend called")
+            try{ 
+                let search = 'SELECT partdesc FROM parts WHERE partno = ?'
+                const results = await app.db.query(search, [selectedPart])
+                const partSelected = results
+                res.json(partSelected);
+                console.log("Line 373: ", partSelected)
+                console.log("Desc call has been made")
+            } catch (err) {
+            console.error("Issue searching: ", err)
+            return res.status(500).json({success: false, message: "Internal server error"});
+                }
+            });
 
 }
 

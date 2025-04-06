@@ -14,6 +14,7 @@ function NewOrder(){
     const [partno, setPartno] = useState();
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
+    const [partdesc, setPartDesc] = useState('');
 
 
     useEffect(() => {
@@ -112,6 +113,7 @@ function NewOrder(){
                       });
                       console.log(sortedPartsData)
                       setPartsList(sortedPartsData);
+                      
                   } else {
                       console.error("Failed to fetch parts");
                       setPartsList([]);
@@ -126,12 +128,40 @@ function NewOrder(){
       };
         
 
-    const handlePartnoChange = (event) =>{
-      setPartno(event.target.value);
-      console.log("Selected partno: ", event.target.value);
-    }
+    const handlePartnoChange = async (event) =>{
+      console.log("Launching handlePartnoChange")
+      const selectedPart = event.target.value;
+      console.log(selectedPart)
+      setPartno(selectedPart)
 
-    
+      console.log("Selected Part: ", selectedPart)
+
+      if(selectedPart) {
+        console.log("I have a selectedPart value")
+        const getDescription = new URLSearchParams({ partno: selectedPart })
+        try {
+          const fetchDesc = await fetch(`/partsDesc?${getDescription.toString()}`, { 
+            headers: {
+                credentials: "include",
+            },
+        });
+        if (getDescription.ok) {
+          console.log("getDescription is ok")
+          const descData = await fetchDesc.json(); 
+          console.log("Description is ok: ", descData)
+      } else {
+          console.error("Failed to fetch Description");
+          setPartDesc([]);
+      }
+  } catch (error) {
+      console.error("Error fetching parts:", error);
+      setPartDesc([]);
+  }
+  } else {
+    setPartDesc([]);
+  }
+};
+  
     function addToOrder(){
 
     }
@@ -150,7 +180,7 @@ function NewOrder(){
             <PageHeader />
             <br></br>
             </header>
-                <select id="vendor" style={{ width: '200px' }} onChange={ handleVendorChange } value={ vendor }>
+                <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor }>
                 <option value="">Select a Vendor</option>
                     {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
@@ -160,7 +190,7 @@ function NewOrder(){
                 </select>
               
                 
-                <select id="partno" style={{width: '200px'}} onChange={ handlePartnoChange } value={ partno }>
+                <select id="partno" style={{width: '150px'}} onChange={ handlePartnoChange } value={ partno }>
                 <option value="">Part #</option>
                     {partsList.map((parts) => (
                         <option key={parts.partno} value = {parts.partno}>
@@ -168,8 +198,9 @@ function NewOrder(){
                         </option>
                     ))}
                 </select>
+                
+                <input id = "partdesc" style={{width: '180px'}} value = { partdesc } placeholder={partdesc}/>
 
-                                    
                 <button onClick={addToOrder}>Add to order</button>
              
         <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
