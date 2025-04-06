@@ -59,40 +59,10 @@ function NewOrder(){
                 }
                 return 0; 
             });
+          }
 
               setVendorList(sortedVendorData);
         
-            if(vendor){
-
-                const fetchParts = await fetch("/partsList", {
-                    header:{
-                        credentials: "include",
-                    }
-                    })
-                     
-                    
-                    if(fetchParts.ok){
-                            const partsData = await fetchParts.json
-        
-                            
-                      const sortedPartsData = [...partsData].sort((a, b) => {
-                        if (a < b) {
-                            return -1;
-                        }
-                        if (a > b) {
-                            return 1;
-                        }
-                        return 0; 
-                    });
-                        }
-                    }
-                    
-                    setPartsList(sortedPartsData)
-
-            } else {
-              console.error("Failed to fetch vendors");
-            }
-      
             setLoading(false);
             console.log("Loading set to: ", false);
             setErr('none');
@@ -117,10 +87,40 @@ function NewOrder(){
             const selectedVendor = event.target.value;
             setVendor(selectedVendor);
             console.log("handleVendorChange selected vendor is: ", selectedVendor);
-            partsResponse(vendor);
-        };
-        
 
+            if (selectedVendor) {
+              try {
+                  const fetchParts = await fetch(`/partsList?vendor=${selectedVendor}`, { // Corrected URL with vendor as query parameter
+                      headers: {
+                          credentials: "include",
+                      },
+                  });
+  
+                  if (fetchParts.ok) {
+                      const partsData = fetchParts.json(); // Corrected json parsing
+                      const sortedPartsData = [...partsData].sort((a, b) => {
+                          if (a.partno < b.partno) { // corrected the comparison to use partno
+                              return -1;
+                          }
+                          if (a.partno > b.partno) {
+                              return 1;
+                          }
+                          return 0;
+                      });
+                      setPartsList(sortedPartsData);
+                  } else {
+                      console.error("Failed to fetch parts");
+                      setPartsList([]);
+                  }
+              } catch (error) {
+                  console.error("Error fetching parts:", error);
+                  setPartsList([]);
+              }
+          } else {
+            setPartsList([]);
+          }
+      };
+        
 
     const handlePartnoChange = (event) =>{
       setPartno(event.target.value);
