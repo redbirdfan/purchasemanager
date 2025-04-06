@@ -59,10 +59,9 @@ function NewOrder(){
                 }
                 return 0; 
             });
+              setVendorList(sortedVendorData);
           }
 
-              setVendorList(sortedVendorData);
-        
             setLoading(false);
             console.log("Loading set to: ", false);
             setErr('none');
@@ -89,17 +88,18 @@ function NewOrder(){
             console.log("handleVendorChange selected vendor is: ", selectedVendor);
 
             if (selectedVendor) {
+              console.log("Launching fetchparts for selectedVendor existing")
               try {
-                  const fetchParts = await fetch(`/partsList?vendor=${selectedVendor}`, { // Corrected URL with vendor as query parameter
+                  const fetchParts = fetch("/partsList", { 
                       headers: {
                           credentials: "include",
                       },
                   });
   
                   if (fetchParts.ok) {
-                      const partsData = fetchParts.json(); // Corrected json parsing
+                      const partsData = fetchParts.json(); 
                       const sortedPartsData = [...partsData].sort((a, b) => {
-                          if (a.partno < b.partno) { // corrected the comparison to use partno
+                          if (a.partno < b.partno) { 
                               return -1;
                           }
                           if (a.partno > b.partno) {
@@ -107,6 +107,7 @@ function NewOrder(){
                           }
                           return 0;
                       });
+                      console.log(sortedPartsData)
                       setPartsList(sortedPartsData);
                   } else {
                       console.error("Failed to fetch parts");

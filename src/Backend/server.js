@@ -345,9 +345,11 @@ app.post("/parts", async(req, res) => {
         });
 
     app.get("/partsList", async(req, res) => {
+        const {vendor} = req.query
+        console.log("PartsList search: " , req.query)
         console.log("part list backend called")
         try{ 
-            let search = 'SELECT partno FROM parts'
+            let search = 'SELECT partno FROM parts WHERE vendor = ?'
             const results = await app.db.query(search)
             const partsList = results [0]
             res.json(partsList);
