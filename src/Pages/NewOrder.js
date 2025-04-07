@@ -117,6 +117,7 @@ function NewOrder(){
                   } else {
                       console.error("Failed to fetch parts");
                       setPartsList([]);
+                      setPartDesc('');
                   }
               } catch (error) {
                   console.error("Error fetching parts:", error);
@@ -145,10 +146,13 @@ function NewOrder(){
                 credentials: "include",
             },
         });
-        if (getDescription.ok) {
+
+        if (fetchDesc.ok) {
           console.log("getDescription is ok")
           const descData = await fetchDesc.json(); 
-          console.log("Description is ok: ", descData)
+          console.log("Description is ok: ", partdesc)
+          setPartDesc(descData[0].partdesc)
+          console.log("Final part desc: ", partdesc)
       } else {
           console.error("Failed to fetch Description");
           setPartDesc([]);
@@ -199,7 +203,7 @@ function NewOrder(){
                     ))}
                 </select>
                 
-                <input id = "partdesc" style={{width: '180px'}} value = { partdesc } placeholder={partdesc}/>
+                <input type="text" id="partDescDisplay" readOnly value={partdesc} />
 
                 <button onClick={addToOrder}>Add to order</button>
              
