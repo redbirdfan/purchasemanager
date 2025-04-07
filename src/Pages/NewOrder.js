@@ -15,6 +15,8 @@ function NewOrder(){
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
     const [partdesc, setPartDesc] = useState('');
+    const [cost, setCost] = useState(null)
+    const [quantity, setQuantity] = useState(0)
 
 
     useEffect(() => {
@@ -151,11 +153,15 @@ function NewOrder(){
           console.log("getDescription is ok")
           const descData = await fetchDesc.json(); 
           console.log("Description is ok: ", partdesc)
+          
           setPartDesc(descData[0].partdesc)
+          setCost(descData[0].cost)
+          console.log("Cost found: ", cost)
           console.log("Final part desc: ", partdesc)
       } else {
           console.error("Failed to fetch Description");
           setPartDesc([]);
+          setCost('')
       }
   } catch (error) {
       console.error("Error fetching parts:", error);
@@ -202,8 +208,12 @@ function NewOrder(){
                         </option>
                     ))}
                 </select>
-                
+
                 <input type="text" id="partDescDisplay" readOnly value={partdesc} />
+
+                <input type="number" id="partCostDisplay" readOnly value={cost} />
+                
+                <input type='number' id = "orderQuantity" placeholder = "QTY" value={quantity} />
 
                 <button onClick={addToOrder}>Add to order</button>
              
