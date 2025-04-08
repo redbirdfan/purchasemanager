@@ -16,7 +16,8 @@ function NewOrder(){
     const [err, setErr] =useState('');
     const [partdesc, setPartDesc] = useState('');
     const [cost, setCost] = useState(null)
-    const [quantity, setQuantity] = useState(0)
+    const [quantity, setQuantity] = useState(null)
+    const [total, setTotal] =useState(null)
 
 
     useEffect(() => {
@@ -172,6 +173,16 @@ function NewOrder(){
   }
 };
   
+    function handleQuantity(){
+      setQuantity(quantity)
+      console.log("Qty: ", quantity)
+      console.log("Cost: ", cost)
+      const sum = (quantity*cost)
+      console.log("Sum: " , sum)
+      setTotal(sum)
+
+    }
+
     function addToOrder(){
 
     }
@@ -213,7 +224,9 @@ function NewOrder(){
 
                 <input type="number" id="partCostDisplay" readOnly value={cost} />
                 
-                <input type='number' id = "orderQuantity" placeholder = "QTY" value={quantity} />
+                <input type='text' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={ handleQuantity }/>
+
+                <input type='text' id = 'linesum' placeholder = "Total" value = { total } />
 
                 <button onClick={addToOrder}>Add to order</button>
              
