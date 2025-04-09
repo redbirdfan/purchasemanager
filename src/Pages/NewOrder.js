@@ -157,7 +157,7 @@ function NewOrder(){
           
           setPartDesc(descData[0].partdesc)
           setCost(descData[0].cost)
-          console.log("Cost found: ", cost)
+          console.log("Line 160, Cost found: ", cost)
           console.log("Final part desc: ", partdesc)
       } else {
           console.error("Failed to fetch Description");
@@ -173,7 +173,8 @@ function NewOrder(){
   }
 };
   
-    function handleQuantity(){
+    function handleQuantity(quantity){
+      console.log("I am trying to handle the quantity")
       setQuantity(quantity)
       console.log("Qty: ", quantity)
       console.log("Cost: ", cost)
@@ -224,9 +225,9 @@ function NewOrder(){
 
                 <input type="number" id="partCostDisplay" readOnly value={cost} />
                 
-                <input type='text' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={ handleQuantity }/>
+                <input type='number' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={(e) => {setQuantity(e.target.value); handleQuantity(e.target.value)}}/>
 
-                <input type='text' id = 'linesum' placeholder = "Total" value = { total } />
+                <input type='number' id = 'linesum' placeholder = "Total" value = { total } />
 
                 <button onClick={addToOrder}>Add to order</button>
              
