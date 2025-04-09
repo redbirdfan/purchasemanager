@@ -17,7 +17,9 @@ function NewOrder(){
     const [partdesc, setPartDesc] = useState('');
     const [cost, setCost] = useState(null)
     const [quantity, setQuantity] = useState(null)
-    const [total, setTotal] =useState(null)
+    const [total, setTotal] = useState(null)
+    const [newOrder, setNewOrder] = useState([])
+    const [newLine, setNewLine] = useState([]) 
 
 
     useEffect(() => {
@@ -185,7 +187,12 @@ function NewOrder(){
     }
 
     function addToOrder(){
-
+        let addingLine = [partno, partdesc, cost, quantity, total];
+        
+        setNewLine(addingLine)
+        console.log("addingLine: ", addingLine)
+        console.log("SetNewLine: ", newLine)
+        
     }
 
     function submitOrder(){
@@ -221,9 +228,9 @@ function NewOrder(){
                     ))}
                 </select>
 
-                <input type="text" id="partDescDisplay" readOnly value={partdesc} />
+                <input type="text" id="partDescDisplay" readOnly value={ partdesc } />
 
-                <input type="number" id="partCostDisplay" readOnly value={cost} />
+                <input type="number" id="partCostDisplay" readOnly value={ cost } />
                 
                 <input type='number' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={(e) => {setQuantity(e.target.value); handleQuantity(e.target.value)}}/>
 
