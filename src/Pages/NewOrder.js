@@ -187,13 +187,14 @@ function NewOrder(){
     }
 
     function addToOrder(){
-        let addingLine = [partno, partdesc, cost, quantity, total];
-        
-        setNewLine(addingLine)
+        const addingLine = [partno, partdesc, cost, quantity, total];
+        setNewOrder([...newOrder, addingLine])
         console.log("addingLine: ", addingLine)
-        console.log("SetNewLine: ", newLine)
-        
     }
+
+    useEffect(() => {
+      console.log("Your new order: ", newOrder);
+  }, [newOrder]);
 
     function submitOrder(){
 
@@ -230,18 +231,30 @@ function NewOrder(){
 
                 <input type="text" id="partDescDisplay" readOnly value={ partdesc } />
 
-                <input type="number" id="partCostDisplay" readOnly value={ cost } />
+                <input type="text" id="partCostDisplay" readOnly value={ cost } />
                 
-                <input type='number' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={(e) => {setQuantity(e.target.value); handleQuantity(e.target.value)}}/>
+                <input type='input' id = "orderQuantity" placeholder = "QTY" value={ quantity } onChange={(e) => {setQuantity(e.target.value); handleQuantity(e.target.value)}}/>
 
                 <input type='number' id = 'linesum' placeholder = "Total" value = { total } />
 
                 <button onClick={addToOrder}>Add to order</button>
              
-        <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
-        </div>
+                <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
+
+          <ul>
+            {newOrder.map((item, index) => (
+                <li key={index}>
+                  {item.map((value, valueIndex) => (
+                    <span key={valueIndex}>
+                      {value}{valueIndex < item.length -1 ? ', ' :''}
+                    </span>
+                  ))}              
+                </li>
+              ))}
+          </ul>
+          </div>
         </>
-    )
+    );
 }
 
 export default NewOrder;
