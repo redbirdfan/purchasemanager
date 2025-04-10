@@ -20,6 +20,7 @@ function NewOrder(){
     const [total, setTotal] = useState(null)
     const [newOrder, setNewOrder] = useState([])
     const [newLine, setNewLine] = useState([]) 
+    const [orderno, setOrderno] = useState(null)
 
 
     useEffect(() => {
@@ -187,10 +188,14 @@ function NewOrder(){
     }
 
     function addToOrder(){
-        const addingLine = [partno, partdesc, cost, quantity, total];
+        if(!orderno){
+          alert("Purchase Order number required")
+        } else {
+        const addingLine = [orderno, partno, partdesc, cost, quantity, total];
         setNewOrder([...newOrder, addingLine])
         console.log("addingLine: ", addingLine)
-    }
+        }
+    }  
 
     useEffect(() => {
       console.log("Your new order: ", newOrder);
@@ -209,6 +214,14 @@ function NewOrder(){
             <header>
             <PageHeader />
             <br></br>
+            <input 
+              type = "text"
+              id = "orderNumber"
+              value = { orderno }
+              placeholder = "PO number"
+              onChange={(e) => {setOrderno(e.target.value)}}
+              />
+
             </header>
                 <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor }>
                 <option value="">Select a Vendor</option>
@@ -240,7 +253,7 @@ function NewOrder(){
                 <button onClick={addToOrder}>Add to order</button>
              
                 <button onClick={submitOrder}>Place Order</button>  {/*will add order to the database*/} 
-
+                  
           <ul>
             {newOrder.map((item, index) => (
                 <li key={index}>
