@@ -21,6 +21,7 @@ function NewOrder(){
     const [newOrder, setNewOrder] = useState([])
     const [newLine, setNewLine] = useState([]) 
     const [orderno, setOrderno] = useState(null)
+    const [readState, setReadState] = useState(false)
 
 
     useEffect(() => {
@@ -119,7 +120,7 @@ function NewOrder(){
                       });
                       console.log(sortedPartsData)
                       setPartsList(sortedPartsData);
-                      
+                      setReadState(true)
                   } else {
                       console.error("Failed to fetch parts");
                       setPartsList([]);
@@ -220,10 +221,11 @@ function NewOrder(){
               value = { orderno }
               placeholder = "PO number"
               onChange={(e) => {setOrderno(e.target.value)}}
+              readOnly={readState}
               />
 
             </header>
-                <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor }>
+                <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor } readOnly={readState}>
                 <option value="">Select a Vendor</option>
                     {vendorList.map((vendor) => (
                         <option key={vendor.vending} value = {vendor.vending}>
