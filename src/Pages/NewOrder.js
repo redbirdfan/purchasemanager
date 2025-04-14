@@ -187,6 +187,38 @@ function NewOrder(){
 
     }
 
+    async function checkOrderNo(orderno) {
+      try {
+          console.log("checking order number");
+          const response = await fetch(`/checkOrderNo?orderno=${orderno}`, {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          });
+  
+          console.log(response);
+  
+          if (response.ok) {
+              const data = await response.json();
+              console.log("order number check response:", data);
+  
+              if (data.exists) {
+                  alert("Order number already exists, please select another one");
+                  setOrderNo('');
+              } else {
+                  setOrderNo(orderno);
+              }
+          } else {
+              console.error("No response: ", response.status, response.statusText);
+              setErr("Error checking order number.");
+          }
+      } catch (error) {
+          console.error("ERROR checking order number:", error);
+          setErr("Error checking order number.");
+      }
+  }
+
     function addToOrder(){
         if(!orderno){
           alert("Purchase Order number required")
@@ -257,7 +289,7 @@ function NewOrder(){
               id = "orderNumber"
               value = { orderno }
               placeholder = "PO number"
-              onChange={(e) => {setOrderno(e.target.value)}}
+              onChange={(e) => {setOrderno(e.target.value); checkOrderNo(e.target.value)}}
               readOnly={ readState }
               />
 

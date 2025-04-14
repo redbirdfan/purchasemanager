@@ -405,6 +405,24 @@ app.post("/parts", async(req, res) => {
 
         }
 
+        app.get("/checkOrderNo", async(req, res) => {
+            const { orderno } = req.query
+            console.log("Order search: " , req.query)
+            console.log("Check order backend called")
+            try{ 
+                let search = 'SELECT orders FROM parts WHERE orderno = ?'
+                const results = await app.db.query(search, [orderno])
+                const orderSearch = results
+                res.json(orderData);
+                console.log("Line 417: ", orderData)
+                console.log("Search order call has been made")
+            } catch (err) {
+            console.error("Issue searching: ", err)
+            return res.status(500).json({success: false, message: "Internal server error"});
+                }
+            });
+    
+
     )}
     
 
