@@ -212,9 +212,36 @@ function NewOrder(){
       console.log("Your new order: ", newOrder);
   }, [newOrder]);
 
-    function submitOrder(){
+    async function submitOrder(){
 
-    }
+        try {
+                            console.log("submitting order")
+                            const response = await fetch("/newOrder", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ newOrder }),
+                            });
+        
+                    console.log(response)                    
+        
+                    if (response.ok){
+                        const data = await response.json();
+                        console.log("New order data sent to the backend")
+                        console.log(data)
+        
+                    } else {
+                        setErr("No response")
+                        console.log(err);  
+                    } 
+        
+                }   catch (err) {
+                    
+                    console.log("ERROR sending data to the backend");
+                    }
+                }    
+                
 
     return(
         <>
@@ -231,21 +258,21 @@ function NewOrder(){
               value = { orderno }
               placeholder = "PO number"
               onChange={(e) => {setOrderno(e.target.value)}}
-              readOnly={readState}
+              readOnly={ readState }
               />
 
             </header>
-                <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor } readOnly={readState}>
-                <option value="">Select a Vendor</option>
+                <select id="vendor" style={{ width: '150px' }} onChange={ handleVendorChange } value={ vendor }>
+                <option value="" readOnly={ readState }>Select a Vendor</option>
                     {vendorList.map((vendor) => (
-                        <option key={vendor.vending} value = {vendor.vending}>
+                        <option key={ vendor.vending } value = { vendor.vending }>
                             {vendor.vending}
                         </option>
                     ))}
                 </select>
               
                 
-                <select id="partno" style={{width: '150px'}} required={true} onChange={ handlePartnoChange } value={ partno }>
+                <select id="partno" style={{ width: '150px' }} onChange={ handlePartnoChange } value={ partno }>
                 <option value="">Part #</option>
                     {partsList.map((parts) => (
                         <option key={parts.partno} value = {parts.partno}>

@@ -380,7 +380,35 @@ app.post("/parts", async(req, res) => {
                 }
             });
 
-}
+        app.post("/newOrder", async(req, res) => {
+            frontendData = req.body
+
+            const orderData = frontendData.newOrder
+
+            console.log("OrderData value: ", orderData)
+
+            orderData.forEach(line => {
+                const [orderno, vendor, partno, partdesc, quantity, total] = line;
+                
+                let post = 'INSERT INTO orders (orderno, vendor, partno, partdesc, quantity, total) VALUES (?,?,?,?,?,?)'
+
+                app.db.query(post, [orderno, vendor, partno, partdesc, quantity, total], (err, results) => {
+                    if(err) {
+                        console.err("Error creating order", err)
+                    } else{
+                        console.log("Order created successfully: ", results)
+                    }
+                        
+            });
+
+        })
+
+        }
+
+    )}
+    
+
+
 
 startServer();
     

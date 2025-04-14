@@ -112,7 +112,7 @@ function PartDataBase() {
                 }
             }
 
-        const newPart = async (e) => {
+    const newPart = async (e) => {
             e.preventDefault();
             setErr("");
 
