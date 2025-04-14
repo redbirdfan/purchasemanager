@@ -19,7 +19,6 @@ function NewOrder(){
     const [quantity, setQuantity] = useState(null)
     const [total, setTotal] = useState(null)
     const [newOrder, setNewOrder] = useState([])
-    const [newLine, setNewLine] = useState([]) 
     const [orderno, setOrderno] = useState(null)
     const [readState, setReadState] = useState(false)
 
@@ -191,10 +190,21 @@ function NewOrder(){
     function addToOrder(){
         if(!orderno){
           alert("Purchase Order number required")
-        } else {
+        } else if(!vendor){
+          alert("Vendor is required")
+        } else if(!partno){
+          alert("Please select a part number")
+        } else if(quantity < 1 || quantity == null){
+          alert("You must select a quantity")}
+          else {
         const addingLine = [orderno, partno, partdesc, cost, quantity, total];
         setNewOrder([...newOrder, addingLine])
         console.log("addingLine: ", addingLine)
+        setQuantity('')
+        setPartno('')
+        setPartDesc('')
+        setCost('')
+        setTotal('')
         }
     }  
 
@@ -235,7 +245,7 @@ function NewOrder(){
                 </select>
               
                 
-                <select id="partno" style={{width: '150px'}} onChange={ handlePartnoChange } value={ partno }>
+                <select id="partno" style={{width: '150px'}} required={true} onChange={ handlePartnoChange } value={ partno }>
                 <option value="">Part #</option>
                     {partsList.map((parts) => (
                         <option key={parts.partno} value = {parts.partno}>
