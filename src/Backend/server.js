@@ -282,7 +282,7 @@ app.post("/parts", async(req, res) => {
         
 
         app.get("/orders", async (req, res) => {
-            const {orderNumber, username, vendor, order_date, order_status} = req.query;
+            const {orderno, vendor, partno} = req.query;
             console.log("Order search: ", req.query)
         
             try { 
@@ -290,30 +290,21 @@ app.post("/parts", async(req, res) => {
                     
                 const params = [];
         
-                    if (orderNumber) {
-                      search += ' AND ordernumber = ?';
-                      params.push(orderNumber);
-                    }
-
-                    if (username) {
-                      search += ' AND LOWER(username) = TRIM(LOWER(?))';
-                      params.push(username);
+                    if (orderno) {
+                      search += ' AND orderno = ?';
+                      params.push(orderno);
                     }
 
                     if (vendor) {
-                      search += ' AND vendor = TRIM(?)';
+                      search += ' AND LOWER(vendor) = TRIM(LOWER(?))';
                       params.push(vendor);
                     }
 
-                    if(order_date) {
-                        search += ' AND order_date = ?'
-                        params.push(order_date)
+                    if (partno) {
+                      search += ' AND partno = TRIM(?)';
+                      params.push(partno);
                     }
-
-                    if (order_status) {
-                        search += ' AND LOWER(order_status) = LOWER(?)';
-                        params.push(order_status);
-                      }
+                    
 
                     console.log("Searching: " + params)
                 
@@ -403,11 +394,11 @@ app.post("/parts", async(req, res) => {
 
         })
 
-        }
+        
 
         app.get("/checkOrderNo", async(req, res) => {
             const { orderno } = req.query
-            console.log("Order search: " , req.query)
+            console.log("Order searching: " , req.query)
             console.log("Check order backend called")
             try{ 
                 let search = 'SELECT orders FROM parts WHERE orderno = ?'
@@ -415,7 +406,7 @@ app.post("/parts", async(req, res) => {
                 const orderSearch = results
                 res.json(orderData);
                 console.log("Line 417: ", orderData)
-                console.log("Search order call has been made")
+                console.log("Search order call has been completed")
             } catch (err) {
             console.error("Issue searching: ", err)
             return res.status(500).json({success: false, message: "Internal server error"});
@@ -423,7 +414,8 @@ app.post("/parts", async(req, res) => {
             });
     
 
-    )}
+    })
+}
     
 
 

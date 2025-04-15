@@ -4,12 +4,12 @@ import PageHeader from "../Components/PageHeader";
 
 function SearchOrder() {
 
-    const [orderNumber, setOrderNumber] = useState("")
+    const [orderno, setOrderno] = useState("")
     const [username, setUsername] = useState("")
     const [orderDate, setDate] = useState(""); 
     const [vendor, setVendor] = useState("");
-    const [received, setReceived] = useState("NO")
-    
+    const [received, setReceived] = useState(null)
+    const [partno, setPartno] = useState('')
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [loading, setLoading] =useState(true);
@@ -49,30 +49,24 @@ function SearchOrder() {
     const findOrder = async (e) => {
         e.preventDefault();
         setErr("")
-
+        
         try {
             console.log("CAlling findOrder")
             const searchOrders = new URLSearchParams()
-            
-            if(orderNumber){
-                searchOrders.append("ordernumber", orderNumber)
-            }
+            console.log("SearchOrder before adding: ", searchOrders)    
 
-            if(username){
-                searchOrders.append("username", username)
+            if(orderno){
+                searchOrders.append("orderno", orderno)
             }
             
-            if(orderDate){
-                searchOrders.append("order_date", orderDate)
-            }
-
             if(vendor){
                 searchOrders.append("vendor", vendor)
             }
 
-            if(received){
-                searchOrders.append("order_status", received)
+            if(partno){
+                searchOrders.append("partno", partno)
             }
+
 
             console.log("Looking for: ", searchOrders)
 
@@ -122,8 +116,8 @@ function formatDate(dateString) {
             <input 
                 type = "text" 
                 placeholder ="Order Number"
-                value = { orderNumber }
-                onChange={(e) => setOrderNumber(e.target.value)}
+                value = { orderno }
+                onChange={(e) => setOrderno(e.target.value)}
             />
             
             <button onClick={findOrder}>Find Order</button>
