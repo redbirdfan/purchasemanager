@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+
 import {useState, useEffect} from "react"
 import PageHeader from '../Components/PageHeader'
-import Cookies from 'js-cookie'; 
+
 
 function NewOrder(){
 
@@ -189,25 +189,26 @@ function NewOrder(){
 
     async function checkOrderNo(orderno) {
       try {
-          console.log("checking order number");
+          console.log("checking order number is unique");
           const response = await fetch(`/checkOrderNo?orderno=${orderno}`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json",
               },
           });
-  
-          console.log(response);
+          let checkOrder = response
+          console.log("Response: ", checkOrder);
   
           if (response.ok) {
               const data = await response.json();
               console.log("order number check response:", data);
   
-              if (data.exists) {
+              if (data.length !== 0) {
                   alert("Order number already exists, please select another one");
-                  setOrderNo('');
+                  setOrderno('');
               } else {
-                  setOrderNo(orderno);
+                  setOrderno(orderno);
+                  setReadState(true)
               }
           } else {
               console.error("No response: ", response.status, response.statusText);
@@ -239,6 +240,17 @@ function NewOrder(){
         setTotal('')
         }
     }  
+
+    const handleNoChange = (e) => {
+      setOrderno(e.target.value)
+    }
+
+    const handleNoBlur = (e) => {
+      if(orderno) {
+        checkOrderNo(orderno)
+      }
+    }
+
 
     useEffect(() => {
       console.log("Your new order: ", newOrder);
@@ -289,8 +301,9 @@ function NewOrder(){
               id = "orderNumber"
               value = { orderno }
               placeholder = "PO number"
-              onChange={(e) => {setOrderno(e.target.value); checkOrderNo(e.target.value)}}
-              readOnly={ readState }
+              onChange = { handleNoChange }
+              onBlur = { handleNoBlur }
+              readOnly = { readState }
               />
 
             </header>

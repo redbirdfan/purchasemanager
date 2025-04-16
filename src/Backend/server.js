@@ -393,6 +393,7 @@ app.post("/parts", async(req, res) => {
             });
 
         })
+    })
 
         
 
@@ -401,24 +402,21 @@ app.post("/parts", async(req, res) => {
             console.log("Order searching: " , req.query)
             console.log("Check order backend called")
             try{ 
-                let search = 'SELECT orders FROM parts WHERE orderno = ?'
+                let search = 'SELECT * FROM orders WHERE orderno = ?'
                 const results = await app.db.query(search, [orderno])
                 const orderSearch = results
-                res.json(orderData);
-                console.log("Line 417: ", orderData)
+                res.json(orderSearch);
+                console.log("Line 417: ", orderSearch)
                 console.log("Search order call has been completed")
             } catch (err) {
             console.error("Issue searching: ", err)
             return res.status(500).json({success: false, message: "Internal server error"});
                 }
             });
-    
 
-    })
+
 }
+
     
-
-
-
 startServer();
     
