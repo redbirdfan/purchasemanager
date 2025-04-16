@@ -125,11 +125,12 @@ function formatDate(dateString) {
             <div>
             {data && data.data.length > 0 && data.data.map((orders, index) => (
                 <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.username}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.ordernumber}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</p> 
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{formatDate(orders?.order_date)}</p>
-                    <p style={{marginLeft: '10px'}}>{orders?.order_status}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partno}</p>
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partdesc}</p> 
+                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.cost}</p>
+                    <p style={{marginRight: '80px', marginLeft: "10px"}}>{orders?.quantity}</p>
+                    <p style={{marginLeft: '10px'}}>{orders?.total}</p>
             </div>
             ))}
             </div>

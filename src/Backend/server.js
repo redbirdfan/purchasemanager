@@ -373,17 +373,17 @@ app.post("/parts", async(req, res) => {
 
         app.post("/newOrder", async(req, res) => {
             frontendData = req.body
-
+            console.log("Trying to create order, Frontend sent: ", frontendData.newOrder)
             const orderData = frontendData.newOrder
 
             console.log("OrderData value: ", orderData)
 
             orderData.forEach(line => {
-                const [orderno, vendor, partno, partdesc, quantity, total] = line;
+                const [orderno, vendor, partno, partdesc, cost, quantity, total] = line;
                 
-                let post = 'INSERT INTO orders (orderno, vendor, partno, partdesc, quantity, total) VALUES (?,?,?,?,?,?)'
+                let post = 'INSERT INTO orders (orderno, vendor, partno, partdesc, cost, quantity, total) VALUES (?,?,?,?,?,?,?)'
 
-                app.db.query(post, [orderno, vendor, partno, partdesc, quantity, total], (err, results) => {
+                app.db.query(post, [orderno, vendor, partno, partdesc, cost, quantity, total], (err, results) => {
                     if(err) {
                         console.err("Error creating order", err)
                     } else{
@@ -404,7 +404,7 @@ app.post("/parts", async(req, res) => {
             try{ 
                 let search = 'SELECT * FROM orders WHERE orderno = ?'
                 const results = await app.db.query(search, [orderno])
-                const orderSearch = results
+                const orderSearch = results[0]
                 res.json(orderSearch);
                 console.log("Line 417: ", orderSearch)
                 console.log("Search order call has been completed")

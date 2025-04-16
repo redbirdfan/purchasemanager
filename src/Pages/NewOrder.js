@@ -15,7 +15,7 @@ function NewOrder(){
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
     const [partdesc, setPartDesc] = useState('');
-    const [cost, setCost] = useState(null)
+    const [cost, setCost] = useState('')
     const [quantity, setQuantity] = useState(null)
     const [total, setTotal] = useState(null)
     const [newOrder, setNewOrder] = useState([])
@@ -201,9 +201,9 @@ function NewOrder(){
   
           if (response.ok) {
               const data = await response.json();
-              console.log("order number check response:", data);
+              console.log("order number check response:", data[0]);
   
-              if (data.length !== 0) {
+              if (data[0].length !== 0) {
                   alert("Order number already exists, please select another one");
                   setOrderno('');
               } else {
@@ -230,7 +230,7 @@ function NewOrder(){
         } else if(quantity < 1 || quantity == null){
           alert("You must select a quantity")}
           else {
-        const addingLine = [orderno, partno, partdesc, cost, quantity, total];
+        const addingLine = [orderno, vendor , partno, partdesc, cost, quantity, total];
         setNewOrder([...newOrder, addingLine])
         console.log("addingLine: ", addingLine)
         setQuantity('')
@@ -256,10 +256,13 @@ function NewOrder(){
       console.log("Your new order: ", newOrder);
   }, [newOrder]);
 
+
     async function submitOrder(){
 
         try {
                             console.log("submitting order")
+                            console.log("OrderNo: ", orderno, "cost: ", cost)
+                            console.log(newOrder[0])
                             const response = await fetch("/newOrder", {
                                 method: "POST",
                                 headers: {
@@ -274,6 +277,13 @@ function NewOrder(){
                         const data = await response.json();
                         console.log("New order data sent to the backend")
                         console.log(data)
+                        setOrderno("")
+                        setVendor("")
+                        setPartno("")
+                        setPartDesc("")
+                        setCost("")
+                        setQuantity("")
+                        setTotal("")
         
                     } else {
                         setErr("No response")
