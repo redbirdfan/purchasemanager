@@ -8,7 +8,9 @@ function Receiving() {
     const [lastName, setLastName] = useState('');
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
-    
+    const [orderno, setOrderno] = useState(''); 
+    const [searchOrder, setSearchOrder] = useState('');
+
          useEffect(() => {
                 
                 async function userProfile() {
@@ -41,15 +43,26 @@ function Receiving() {
                     userProfile();
                     console.log("userProfile function called")
                 }, []);
-    
+
+    async function pullOrder() {
+        
+    }
+
 
     return(
         <>
             <div>
                 {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
                 <PageHeader />  
-                <h1>Under Construction</h1>
-                <p>Receiving orders coming soon</p>  
+                <h1>Receiving order</h1>
+                <input  text = "PO Number" 
+                        placeholder='PO Number' 
+                        value = { orderno }
+            
+                />
+                
+                <button onClick={pullOrder()}/>
+           
            </div>
         </>
     )

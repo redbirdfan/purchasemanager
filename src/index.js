@@ -12,6 +12,7 @@ import NewAccount from './Pages/NewAccount';
 import reportWebVitals from './reportWebVitals';
 import Receiving from './Pages/Receiving';
 import Vendor from './Pages/Vendor'
+import { UserProvider } from './userContext';
 
 function Routing() {
   return (
@@ -34,7 +35,7 @@ function Routing() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Routing />
+      <Routing />
   </React.StrictMode>
 );
 
