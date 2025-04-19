@@ -1,17 +1,16 @@
-import React, { useCallback } from "react";
-import { useState, useContext } from "react";
+import React, { useCallback, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../userContext";
+import { UserContext } from "../UserContext";
+import Cookies from "js-cookie";
 
 function LoginPage() {
+  const { setUser } = useContext(UserContext)
   const [username, setUsername] = useState("");
-  const {setUserData} = useContext(UserContext)
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
-
   const navigate = useNavigate();
 
-
+  console.log("Launching login page")
 
   const checkUser = useCallback(async (e) => {
     e.preventDefault();
@@ -32,24 +31,33 @@ function LoginPage() {
         });
 
         const data = await response.json();
+        console.log("Login data from backend: ", data)
 
         if (response.ok) {
+          console.log("Data after call: ", data)
           const token = data.token;
           Cookies.set("authToken", token, { path: "/", expires: 2 });
-          navigate("/hub");
-          console.log("backend connection successful");
-          console.log(data);
+
+          if (data.firstName && data.lastName) {
+            setUser(data.firstName, data.lastName);
+            navigate("/hub");
+            console.log("backend connection successful");
+            console.log(data);
+          } else {
+            setErr("Login successful, but user data (firstName, lastName) not received.");
+            console.error("Missing firstName or lastName in the login response:", data);
+            navigate("/hub");
+          }
         } else {
-          setErr("No response");
-          console.log(err);
+          setErr(data.message || "Login failed. Invalid username or password.");
+          console.log("Login failed:", data);
         }
-      } catch (err) {
-        console.log("ERROR", err);
+      } catch (error) {
+        setErr("An unexpected error occurred during login.");
+        console.error("ERROR:", error);
       }
     }
-  },[username, password, navigate]);
-
-
+  }, [username, password, navigate, setUser]); 
 
   return (
     <>
@@ -78,10 +86,10 @@ function LoginPage() {
           />
           <button type="submit">Login</button>
         </form>
+        {err && <p style={{ color: "red" }}>{err}</p>}
       </div>
     </>
   );
 }
-
 
 export default LoginPage;

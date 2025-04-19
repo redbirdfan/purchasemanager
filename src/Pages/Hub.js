@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilIcon, NewspaperIcon, CogIcon, BookmarkSquareIcon, ClipboardDocumentCheckIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { UserContext } from "../UserContext";
 
 function Hub() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const user = useContext(UserContext)
     const [loading, setLoading] =useState(true);
     const [err, setErr] =useState('');
       
@@ -36,10 +36,10 @@ function Hub() {
     }
 
     console.log("Loading state before render:" ,loading);
-
+    console.log("User: ", user)
     return(
         <>
-            {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
+            {loading === false && <p>{"User: " + user.firstName + " " + user.lastName}</p>}
             <div style={{display: "flex", alignItems: 'center',justifyContent: 'center'}}>
             <button onClick={startOrder} style={{width: 150, height: 150}} className="flex items-center">
                 New Order

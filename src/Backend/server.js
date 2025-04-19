@@ -55,7 +55,7 @@ app.post("/loginPage", async (req, res) => {
     try{
 
     const [results]=await db.query(search, [loginUsername]);
-
+        console.log("After backend username query: ", results[0])
              if(results.length  === 0) {
                 return res.status(401).json({ success: false, message: "Invalid username" })
              }
@@ -68,6 +68,8 @@ app.post("/loginPage", async (req, res) => {
             if (passwordMatch) {
                 const payload = {
                     Username: storedUser,
+                    firstName: results[0].FirstName,
+                    lastName: results[0].LastName
                 };
 
                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '3h' });
