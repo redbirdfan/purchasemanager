@@ -4,13 +4,13 @@ import { UserContext } from "../UserContext";
 import Cookies from "js-cookie";
 
 function LoginPage() {
-  const { setUser } = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
-  console.log("Launching login page")
+  console.log("Launching login page");
 
   const checkUser = useCallback(async (e) => {
     e.preventDefault();
@@ -31,23 +31,25 @@ function LoginPage() {
         });
 
         const data = await response.json();
-        console.log("Login data from backend: ", data)
+        console.log("Login data from backend: ", data);
 
-        if (response.ok) {
-          console.log("Data after call: ", data)
-          const token = data.token;
+        if (response.ok && data.firstName && data.lastName && data.Username) {
+          console.log("Login successful, user data received:", data);
+          const token = data.token; // Assuming the backend still sends a token
           Cookies.set("authToken", token, { path: "/", expires: 2 });
 
-          if (data.firstName && data.lastName) {
-            setUser(data.firstName, data.lastName);
-            navigate("/hub");
-            console.log("backend connection successful");
-            console.log(data);
-          } else {
-            setErr("Login successful, but user data (firstName, lastName) not received.");
-            console.error("Missing firstName or lastName in the login response:", data);
-            navigate("/hub");
-          }
+          setUser({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            username: data.Username,
+          });
+          navigate("/hub");
+          console.log("Backend connection successful, user context updated.");
+        } else if (response.ok) {
+          // Login successful, but missing user data in the response
+          setErr("Login successful, but missing user information from the server.");
+          console.error("Missing firstName, lastName, or Username in login response:", data);
+          navigate("/hub"); // Decide if navigation should still occur
         } else {
           setErr(data.message || "Login failed. Invalid username or password.");
           console.log("Login failed:", data);
@@ -57,7 +59,7 @@ function LoginPage() {
         console.error("ERROR:", error);
       }
     }
-  }, [username, password, navigate, setUser]); 
+  }, [username, password, navigate, setUser]);
 
   return (
     <>
