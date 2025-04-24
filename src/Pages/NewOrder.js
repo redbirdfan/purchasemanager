@@ -18,6 +18,7 @@ function NewOrder() {
   const [newOrder, setNewOrder] = useState([]);
   const [orderno, setOrderno] = useState(null);
   const [readState, setReadState] = useState(false);
+  const received = "No";
 
   const handleVendorChange = async (event) => {
     console.log("Vendor handler is being called");
@@ -94,8 +95,10 @@ function NewOrder() {
 
           setPartDesc(descData[0].partdesc);
           setCost(descData[0].cost);
+
           console.log("Line 160, Cost found: ", cost);
           console.log("Final part desc: ", partdesc);
+          console.log("Total: ", total)
         } else {
           console.error("Failed to fetch Description");
           setPartDesc([]);
@@ -171,6 +174,7 @@ function NewOrder() {
         cost,
         quantity,
         total,
+        received
       ];
       setNewOrder([...newOrder, addingLine]);
       console.log("addingLine: ", addingLine);
@@ -199,7 +203,7 @@ function NewOrder() {
   async function submitOrder() {
     try {
       console.log("submitting order");
-      console.log("OrderNo: ", orderno, "cost: ", cost);
+      console.log("OrderNo: ", orderno, "cost: ", cost, "Received state: ", received);
       console.log(newOrder[0]);
       const response = await fetch("/newOrder", {
         method: "POST",
