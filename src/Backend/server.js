@@ -62,6 +62,9 @@ app.post("/loginPage", async (req, res) => {
 
              const storedHashedPassword = results[0].password;
              const storedUser = results[0].Username;
+             const firstName = results[0].FirstName;
+             const lastName = results[0].LastName
+             const username = results[0].Username
 
              const passwordMatch = await bcrypt.compare(loginPassword, storedHashedPassword);
 
@@ -81,7 +84,7 @@ app.post("/loginPage", async (req, res) => {
                     maxAge: 60* 60 * 1000,
                 })
 
-            res.json({message: "log in successful", token: token})
+            res.json({message: "log in successful", token: token, firstName: firstName, lastName: lastName, username: username})
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
             }      
@@ -111,6 +114,7 @@ app.get('/profile', async (req, res) => {
       console.log("Username: ", username)
       const [user] = await app.db.query('SELECT FirstName, LastName FROM users WHERE Username = ?', [username])
       if (user.length > 0) {
+        console.log("Username and password found")
         res.json({success: true, user: user[0]})
       } else {
         res.status(404).json({success: false, message: 'User not found'

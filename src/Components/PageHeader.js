@@ -2,8 +2,10 @@ import React from 'react'
 import { useContext } from 'react';
 import { Link } from 'react-router-dom'
 import { UserContext } from '../UserContext';
+
 function PageHeader(){
     const { firstName, lastName, clearUser } = useContext(UserContext);
+    
     async function logout(){
            
               try {
@@ -23,7 +25,7 @@ function PageHeader(){
     return(
         <> 
         <div>
-          {firstName && lastName && <p>{firstName}{lastName}</p>}
+          {firstName && lastName && <p>User: {firstName} {lastName}</p>}
         </div>
         <div style={{display: "flex", justifyContent:"center"}}>
         <Link to={"/NewOrder"} style={{marginRight: "50px"}}>New Order</Link>

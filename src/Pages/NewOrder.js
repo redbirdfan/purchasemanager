@@ -1,11 +1,10 @@
 import React from "react";
-
-import { useState, useEffect } from "react";
+import { UserContext } from "../UserContext";
+import { useState, useEffect, useContext } from "react";
 import PageHeader from "../Components/PageHeader";
 
 function NewOrder() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const user = useContext(UserContext);
   const [vendorList, setVendorList] = useState([]);
   const [vendor, setVendor] = useState("");
   const [partsList, setPartsList] = useState([]);
@@ -19,67 +18,6 @@ function NewOrder() {
   const [newOrder, setNewOrder] = useState([]);
   const [orderno, setOrderno] = useState(null);
   const [readState, setReadState] = useState(false);
-  
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const profileResponse = await fetch("/profile", {
-          headers: {
-            credentials: "include",
-          },
-        });
-
-        console.log("fetch /profile: ", profileResponse);
-
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          setFirstName(profileData.user.FirstName);
-          setLastName(profileData.user.LastName);
-          console.log(profileData.FirstName, profileData.LastName);
-        } else {
-          setErr("failed to find user");
-          setLoading(true);
-          console.log("Set loading to: ", true);
-        }
-
-        const vendorResponse = await fetch("/vendorList", {
-          headers: {
-            credentials: "include",
-          },
-        });
-
-        if (vendorResponse.ok) {
-          const vendorData = await vendorResponse.json();
-
-          const sortedVendorData = [...vendorData].sort((a, b) => {
-            const nameA = a.vending.toUpperCase();
-            const nameB = b.vending.toUpperCase();
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            return 0;
-          });
-          setVendorList(sortedVendorData);
-        }
-
-        setLoading(false);
-        console.log("Loading set to: ", false);
-        setErr("none");
-      } catch (error) {
-        setErr("Network Error");
-        setLoading(true);
-        console.log("Loading set to: ", true);
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    fetchData();
-    console.log("fetchData function called");
-  }, []);
-
 
   const handleVendorChange = async (event) => {
     console.log("Vendor handler is being called");
@@ -296,9 +234,9 @@ function NewOrder() {
   return (
     <>
       <header>Place your order...</header>
+
       <div>
-        {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
-        <header>
+        
           <PageHeader />
           <br></br>
           <input
@@ -310,7 +248,7 @@ function NewOrder() {
             onBlur={handleNoBlur}
             readOnly={readState}
           />
-        </header>
+      
         <select
           id="vendor"
           style={{ width: "150px" }}

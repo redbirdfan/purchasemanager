@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { UserContext } from "../UserContext";
 import Cookies from "js-cookie";
 
@@ -33,23 +33,24 @@ function LoginPage() {
         const data = await response.json();
         console.log("Login data from backend: ", data);
 
-        if (response.ok && data.firstName && data.lastName && data.Username) {
+        if (response.ok && data.firstName && data.lastName && data.username) {
           console.log("Login successful, user data received:", data);
-          const token = data.token; // Assuming the backend still sends a token
+          const token = data.token; 
           Cookies.set("authToken", token, { path: "/", expires: 2 });
 
           setUser({
             firstName: data.firstName,
             lastName: data.lastName,
-            username: data.Username,
+            username: data.username,
           });
+        
           navigate("/hub");
           console.log("Backend connection successful, user context updated.");
         } else if (response.ok) {
-          // Login successful, but missing user data in the response
+          
           setErr("Login successful, but missing user information from the server.");
           console.error("Missing firstName, lastName, or Username in login response:", data);
-          navigate("/hub"); // Decide if navigation should still occur
+          navigate("/hub"); 
         } else {
           setErr(data.message || "Login failed. Invalid username or password.");
           console.log("Login failed:", data);

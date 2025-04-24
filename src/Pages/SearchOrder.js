@@ -1,49 +1,21 @@
 import React from "react";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import PageHeader from "../Components/PageHeader";
+import UserContext from "../UserContext"
 
 function SearchOrder() {
 
+    const user = useContext(UserContext);
     const [orderno, setOrderno] = useState("")
     const [username, setUsername] = useState("")
     const [orderDate, setDate] = useState(""); 
     const [vendor, setVendor] = useState("");
     const [received, setReceived] = useState(null)
     const [partno, setPartno] = useState('')
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [loading, setLoading] =useState(true);
     const [err, setErr] = useState('');
     
     const [data, setData] = useState();
-
-
-        useEffect(() => {
-            async function userProfile() {
-                try {
-                    const response =await fetch('/profile', {
-                        headers: {
-                            credentials: 'include',
-                        }
-                    });
-                    console.log("fetch /profile: ", response)
-                    if (response.ok) {
-                        const data = await response.json();
-                        setFirstName(data.user.FirstName)
-                        setLastName(data.user.LastName)
-                        setLoading(false);
-                        setErr('none')
-                    } else {
-                        setErr("failed to find user")
-                        setLoading(true)
-                    }
-                }catch(err) {
-                    setErr("Network Error")
-                    setLoading(true)
-                }
-                }
-                userProfile();
-            }, []);
     
 
     const findOrder = async (e) => {
@@ -111,7 +83,7 @@ function formatDate(dateString) {
 
     return (
             <>
-            {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
+
             <header><PageHeader /></header>
             <input 
                 type = "text" 
