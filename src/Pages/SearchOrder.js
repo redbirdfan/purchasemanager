@@ -1,11 +1,10 @@
 import React from "react";
 import {useState, useEffect, useContext} from "react";
 import PageHeader from "../Components/PageHeader";
-import UserContext from "../UserContext"
 
 function SearchOrder() {
 
-    const user = useContext(UserContext);
+    
     const [orderno, setOrderno] = useState("")
     const [username, setUsername] = useState("")
     const [orderDate, setDate] = useState(""); 
