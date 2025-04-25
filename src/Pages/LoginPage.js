@@ -10,8 +10,6 @@ function LoginPage() {
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
-  console.log("Launching login page");
-
   const checkUser = useCallback(async (e) => {
     e.preventDefault();
     setErr("");

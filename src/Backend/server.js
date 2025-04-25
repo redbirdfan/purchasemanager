@@ -404,13 +404,14 @@ app.post("/parts", async(req, res) => {
         
 
         app.get("/checkOrderNo", async(req, res) => {
-            const { orderno } = req.query
-            console.log("Order searching: " , req.query)
+            const orderno = req.query
+            console.log("Order searching: " , orderno)
             console.log("Check order backend called")
             try{ 
                 let search = 'SELECT * FROM orders WHERE orderno = ?'
                 const results = await app.db.query(search, [orderno])
-                const orderSearch = results[0]
+                console.log("Query results: ", results)
+                const orderSearch = results
                 res.json(orderSearch);
                 console.log("Line 417: ", orderSearch)
                 console.log("Search order call has been completed")

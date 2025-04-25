@@ -18,11 +18,11 @@ function NewOrder() {
   const [newOrder, setNewOrder] = useState([]);
   const [orderno, setOrderno] = useState(null);
   const [readState, setReadState] = useState(false);
-  const received = "No";
+  const [received, setReceived] = ("No");
 
   const handleVendorChange = async (event) => {
     console.log("Vendor handler is being called");
-    event.stopPropagation();
+    
     const selectedVendor = event.target.value;
     setVendor(selectedVendor);
     console.log("handleVendorChange selected vendor is: ", selectedVendor);
@@ -137,14 +137,17 @@ function NewOrder() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("order number check response:", data[0]);
+        console.log("order number check response:", data);
 
-        if (data[0].length !== 0) {
+        if (data.length !== 0) {
           alert("Order number already exists, please select another one");
           setOrderno("");
         } else {
           setOrderno(orderno);
           setReadState(true);
+          console.log(orderno)
+          handleVendorChange(orderno);
+          
         }
       } else {
         console.error("No response: ", response.status, response.statusText);
@@ -174,7 +177,7 @@ function NewOrder() {
         cost,
         quantity,
         total,
-        received
+        received,
       ];
       setNewOrder([...newOrder, addingLine]);
       console.log("addingLine: ", addingLine);

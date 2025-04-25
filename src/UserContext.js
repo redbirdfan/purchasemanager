@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react';
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  console.log("UserProvider is called")
+  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
