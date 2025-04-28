@@ -229,32 +229,36 @@ function NewOrder() {
 
 
   async function submitOrder() {
+    let response;
     try {
       console.log("submitting order");
       console.log("OrderNo: ", orderno, "cost: ", cost, "Received state: ", received);
-      console.log(newOrder[0]);
+      console.log("Line 235" , newOrder[0]);
       const response = await fetch("/newOrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ newOrder }),
-      });
 
-      console.log(response);
+        
+      }
+    );
+
+      console.log("Submit order response: ", response);
 
       if (response.ok) {
         const data = await response.json();
-        console.log("New order data sent to the backend");
-        console.log(data);
-        setOrderno("");
+        console.log("Response okay")
+        setReadState(false)
+        setOrderno(null);
+        console.log("After submit orderno: ", orderno)
         setVendor("");
         setPartno("");
         setPartDesc("");
         setCost("");
-        setQuantity("");
-        setTotal("");
-        setReadState(false)
+        setQuantity(null);
+        setTotal(null);
       } else {
         setErr("No response");
         console.log(err);
