@@ -18,18 +18,20 @@ function NewOrder() {
   const [newOrder, setNewOrder] = useState([]);
   const [orderno, setOrderno] = useState(null);
   const [readState, setReadState] = useState(false);
-  const [received, setReceived] = ("No");
+  const received = 'N';
 
   const handleVendorChange = async (event) => {
     console.log("Vendor handler is being called");
     
-    const selectedVendor = event.target.value;
-    setVendor(selectedVendor);
+    const selectedVendor = event.target.value
+
     console.log("handleVendorChange selected vendor is: ", selectedVendor);
 
+    setVendor(selectedVendor);
+
     if (selectedVendor) {
-      console.log("Launching fetchparts for selectedVendor existing");
-      console.log(selectedVendor);
+      console.log("Launching fetch parts for selectedVendor existing");
+      console.log(vendor);
 
       const searchParts = new URLSearchParams({ vendor: selectedVendor });
       try {
@@ -146,8 +148,6 @@ function NewOrder() {
           setOrderno(orderno);
           setReadState(true);
           console.log(orderno)
-          handleVendorChange(orderno);
-          
         }
       } else {
         console.error("No response: ", response.status, response.statusText);
@@ -200,8 +200,32 @@ function NewOrder() {
   };
 
   useEffect(() => {
-    console.log("Your new order: ", newOrder);
-  }, [newOrder]);
+    const fetchVendors = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("/vendorList"); 
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Vendor list data:", data);
+          setVendorList(data); 
+          setLoading(false);
+        } else {
+          console.error("Failed to fetch vendors");
+          setErr("Failed to load vendors.");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+        setErr("Error loading vendors.");
+        setLoading(false);
+      }
+    };
+
+    if (readState) { 
+      fetchVendors();
+    }
+  }, [readState]);
+
 
   async function submitOrder() {
     try {
@@ -229,6 +253,7 @@ function NewOrder() {
         setCost("");
         setQuantity("");
         setTotal("");
+        setReadState(false)
       } else {
         setErr("No response");
         console.log(err);
