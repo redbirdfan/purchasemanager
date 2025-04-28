@@ -181,6 +181,7 @@ function NewOrder() {
       ];
       setNewOrder([...newOrder, addingLine]);
       console.log("addingLine: ", addingLine);
+    
       setQuantity("");
       setPartno("");
       setPartDesc("");
