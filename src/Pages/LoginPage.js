@@ -2,6 +2,8 @@ import React, { useCallback, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { UserContext } from "../UserContext";
 import Cookies from "js-cookie";
+import "../App.css"
+
 
 function LoginPage() {
   const { setUser } = useContext(UserContext);
@@ -63,12 +65,14 @@ function LoginPage() {
   return (
     <>
       <div
+        className="background" 
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
+      
         <header>Welcome to Purchase Manager</header>
         <h1>Please login below</h1>
         <form onSubmit={checkUser}>
@@ -87,6 +91,7 @@ function LoginPage() {
           />
           <button type="submit">Login</button>
         </form>
+      
         {err && <p style={{ color: "red" }}>{err}</p>}
       </div>
     </>

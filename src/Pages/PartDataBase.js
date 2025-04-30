@@ -86,6 +86,7 @@ function PartDataBase() {
             if(!vendor || !partNo || !partDesc || !cost) {
                         setErr("Required field missing");
                         console.log("Required field missing");
+                        alert("Missing required field to create new part")
                         return;
                     } else {
                         try {
@@ -120,7 +121,44 @@ function PartDataBase() {
         
 
         function deletePart(){
-                alert("Ability to delete is under construction")
+            alert("Ability to delete is under construction")
+         {/*}   e.preventDefault();
+            setErr("");
+
+            if(!vendor || !partNo || !partDesc || !cost) {
+                        setErr("Required field missing");
+                        console.log("Required field missing");
+                        alert("Missing required field")
+                        return;
+                    } else {
+                        try {
+                                console.log("trying to delete")
+                                const response = await fetch("/parts", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ vendor, partNo, partDesc, cost }),
+                                });
+            
+                        console.log(response)                    
+            
+                        if (response.ok){
+                            const data = await response.json();
+
+                            console.log(data)
+            
+                        } else {
+                            setErr("No response")
+                            console.log(err);  
+                        } 
+            
+                    }   catch (err) {
+                        
+                        console.log("ERROR");
+                        }
+                    }  */}  
+                    
         }
     
     return (
