@@ -119,6 +119,9 @@ function PartDataBase() {
                 }  
         
 
+        function deletePart(){
+                alert("Ability to delete is under construction")
+        }
     
     return (
         <>
@@ -162,6 +165,7 @@ function PartDataBase() {
             
             <button onClick={findPart}>Find Part</button>
             <button onClick={newPart}>Add Part</button>
+            <button onClick={deletePart}>Delete Part</button>
             <button onClick={clearSearch}>Clear Search</button>
             <div>
             {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (

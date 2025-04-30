@@ -102,7 +102,7 @@ function formatDate(dateString) {
                     <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.cost}</p>
                     <p style={{marginRight: '80px', marginLeft: "10px"}}>{orders?.quantity}</p>
                     <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.total}</p>
-                    <p style={{marginLeft: '10px'}}>{orders.received}</p>
+                    <p style={{marginLeft: '10px'}}>{orders?.received}</p>
             </div>
             ))}
             </div>

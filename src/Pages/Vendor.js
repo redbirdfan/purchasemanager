@@ -100,10 +100,10 @@ function Vendor(){
 
         <button onClick={searchVendor}>Search</button>
 
-        <div style={{display: "flex", flexWrap: "wrap"}}>
+        <div>
             {searchComplete && data && data.success && data.data.length > 0 && 
             data.data.map((vendor, index) => (
-            <div key = {index} style={{display: "inline-block", marginRight: "20px", verticalAlign: "top"}}>
+            <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px', flexDirection: 'row'}}>
             <p>{vendor?.VendorName}</p>
             <p>{vendor?.Address}</p> 
             <p>{vendor?.phone}</p>
