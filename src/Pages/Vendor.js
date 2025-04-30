@@ -104,10 +104,10 @@ function Vendor(){
             {searchComplete && data && data.success && data.data.length > 0 && 
             data.data.map((vendor, index) => (
             <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px', flexDirection: 'row'}}>
-            <p>{vendor?.VendorName}</p>
-            <p>{vendor?.Address}</p> 
-            <p>{vendor?.phone}</p>
-            <p>{vendor?.account}</p>
+            <p style={{marginRight: '80px', marginLeft: '10px'}}>{vendor?.VendorName}</p>
+            <p style={{marginRight: '80px', marginLeft: '10px'}}>{vendor?.Address}</p> 
+            <p style={{marginRight: '80px', marginLeft: '10px'}}>{vendor?.phone}</p>
+            <p style={{marginRight: '80px', marginLeft: '10px'}}>{vendor?.account}</p>
             </div>
             ))}      
         </div>
