@@ -378,28 +378,38 @@ app.post("/parts", async(req, res) => {
             });
 
         app.post("/newOrder", async(req, res) => {
+            let errors = [];
+            console.log("New Order being called")
             frontendData = req.body
             console.log("Trying to create order, Frontend sent: ", frontendData.newOrder)
             const orderData = frontendData.newOrder
-
             console.log("OrderData value: ", orderData)
 
-            orderData.forEach(line => {
-                const [orderno, vendor, partno, partdesc, cost, quantity, total, received] = line;
-                
-                let post = 'INSERT INTO orders (orderno, vendor, partno, partdesc, cost, quantity, total, received) VALUES (?,?,?,?,?,?,?,?)'
-
+            try{
+                for (const line of orderData){
+                const [orderno, vendor, partno, partdesc, cost, quantity, total, received] = line;   
+                const post = 'INSERT INTO orders (orderno, vendor, partno, partdesc, cost, quantity, total, received) VALUES (?,?,?,?,?,?,?,?)'
+            
+                await new Promise((resolve, reject) => {
                 app.db.query(post, [orderno, vendor, partno, partdesc, cost, quantity, total, received], (err, results) => {
                     if(err) {
                         console.err("Error creating order", err)
+                        errors.push(err)
+                        reject(err);
                     } else{
+                        res.status(200).json({ message: "Orders created successfully" })
                         console.log("Order created successfully: ", results)
-                    }
-                        
-            });
-
-        })
-    })
+                        resolve(results)
+                        }
+                    });
+                });
+            }
+            
+            res.status(200).json({ message: "Orders created successfully" });
+        } catch (error){
+            console.log("Order could not be created")
+        }
+    });
 
         
 

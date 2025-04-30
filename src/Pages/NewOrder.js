@@ -143,7 +143,7 @@ function NewOrder() {
 
         if (data.length !== 0) {
           alert("Order number already exists, please select another one");
-          setOrderno("");
+          setOrderno(null);
         } else {
           setOrderno(orderno);
           setReadState(true);
@@ -227,9 +227,16 @@ function NewOrder() {
     }
   }, [readState]);
 
+  function clearOrderData() {
+    console.log("ClearOrderData called")
+    setNewOrder([])
+    setOrderno(null)
+    setVendor('')
+    setTotal('')
+    setReadState(false)
 
+  }
   async function submitOrder() {
-    let response;
     try {
       console.log("submitting order");
       console.log("OrderNo: ", orderno, "cost: ", cost, "Received state: ", received);
@@ -240,33 +247,21 @@ function NewOrder() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ newOrder }),
+      });
 
-        
-      }
-    );
-
-      console.log("Submit order response: ", response);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Response okay")
-        setReadState(false)
-        setOrderno(null);
-        console.log("After submit orderno: ", orderno)
-        setVendor("");
-        setPartno("");
-        setPartDesc("");
-        setCost("");
-        setQuantity(null);
-        setTotal(null);
-      } else {
+      if(!response.ok) {
         setErr("No response");
-        console.log(err);
-      }
+        console.log("No response: ", err);
+    } else {
+        alert("New order submitted")
+      } 
     } catch (err) {
       console.log("ERROR sending data to the backend");
     }
+
+    clearOrderData()
   }
+
 
   return (
     <>
@@ -328,8 +323,8 @@ function NewOrder() {
         />
         <input type="number" id="linesum" placeholder="Total" value={total} />
         <button onClick={addToOrder}>Add to order</button>
-        <button onClick={submitOrder}>Place Order</button>{" "}
-        {/*will add order to the database*/}
+        <button onClick={submitOrder}>Place Order</button>
+        <button onClick={clearOrderData}>Clear Order</button>
         <ul>
           {newOrder.map((item, index) => (
             <li key={index}>
