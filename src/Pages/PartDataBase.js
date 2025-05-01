@@ -210,12 +210,11 @@ function PartDataBase() {
                 <table>
                     <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
                         <th style={{marginRight: '80px', marginLeft: '10px'}}>Vendor</th>
-                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Part#</th>
-                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Description</th>
-                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Cost</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Part#</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Description</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Cost</th>
                     </tr>
             {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
-            
                 <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
                     <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.vendor}</td>
                     <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partno}</td> 

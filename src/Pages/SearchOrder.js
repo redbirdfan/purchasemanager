@@ -92,19 +92,30 @@ function formatDate(dateString) {
             />
             
             <button onClick={findOrder}>Find Order</button>
-
-            <div>
+            <div> 
+                <table>
+                    <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Vendor</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Part#</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Description</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Cost</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Quantity</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Total</th>
+                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Received Status</th>
+                    </tr>
             {data && data.data.length > 0 && data.data.map((orders, index) => (
-                <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partno}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partdesc}</p> 
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.cost}</p>
-                    <p style={{marginRight: '80px', marginLeft: "10px"}}>{orders?.quantity}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.total}</p>
-                    <p style={{marginLeft: '10px'}}>{orders?.received}</p>
-            </div>
-            ))}
+                <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</td>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partno}</td>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partdesc}</td> 
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.cost}</td>
+                    <td style={{marginRight: '80px', marginLeft: "10px"}}>{orders?.quantity}</td>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.total}</td>
+                    <td style={{marginLeft: '10px'}}>{orders?.received}</td>
+                </tr>
+                )
+            )}
+                </table>
             </div>
         </>
     
