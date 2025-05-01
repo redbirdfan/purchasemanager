@@ -205,16 +205,27 @@ function PartDataBase() {
             <button onClick={newPart}>Add Part</button>
             <button onClick={deletePart}>Delete Part</button>
             <button onClick={clearSearch}>Clear Search</button>
+            
             <div>
+                <table>
+                    <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Vendor</th>
+                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Part#</th>
+                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Description</th>
+                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Cost</th>
+                    </tr>
             {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
-                <div key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.vendor}</p>
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partno}</p> 
-                    <p style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partdesc}</p>
-                    <p style={{marginLeft: '10px'}}>{parts?.cost}</p>
-                 </div>
-            ))}
-            </div>
+            
+                <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.vendor}</td>
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partno}</td> 
+                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partdesc}</td>
+                    <td style={{marginLeft: '10px'}}>{parts?.cost}</td>
+                 </tr>
+            )
+            )}
+            </table>
+        </div>
         </>
     )
        }
