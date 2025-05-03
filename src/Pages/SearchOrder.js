@@ -92,6 +92,7 @@ function formatDate(dateString) {
             />
             
             <button onClick={findOrder}>Find Order</button>
+           
             <div> 
                 <table>
                     <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
@@ -103,6 +104,7 @@ function formatDate(dateString) {
                         <th style={{marginRight: '80px', marginLeft: '20px'}}>Total</th>
                         <th style={{marginRight: '80px', marginLeft: '20px'}}>Received Status</th>
                     </tr>
+                    
             {data && data.data.length > 0 && data.data.map((orders, index) => (
                 <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
                     <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</td>

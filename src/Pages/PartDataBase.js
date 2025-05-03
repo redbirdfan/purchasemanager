@@ -1,16 +1,69 @@
 import React from "react";
-import {useState, useEffect} from "react";
+import {useState, useMemo} from "react";
 import PageHeader from "../Components/PageHeader";
 import "./InputBox.css"
+import { useTable, useSortBy } from 'react-table'
 
 function PartDataBase() {
+
+    function Table({ columns, data }) {
+        console.log("Table received props: ", {columns, data})
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+        } = useTable(
+            {
+                columns,
+                data,
+            },
+            useSortBy
+        );
     
+        return (
+            <table {...getTableProps()}>
+                <thead>
+                    {headerGroups.map(headerGroup => (
+                        <tr {...headerGroup.getHeaderGroupProps()} style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px' }}>
+                            {headerGroup.headers.map(column => (
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ marginRight: '80px', marginLeft: '10px', cursor: 'pointer' }}>
+                                    {column.render('Header')}
+                                    <span>
+                                        {column.isSorted
+                                            ? column.isSortedDesc
+                                                ? ' 🔽'
+                                                : ' 🔼'
+                                            : ''}
+                                    </span>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>
+                                {row.cells.map(cell => {
+                                    return <td {...cell.getCellProps()} style={{ marginRight: '80px', marginLeft: '10px' }}>{cell.render('Cell')}</td>
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        );
+    }
+        
     const [vendor, setVendor] = useState("");
     const [partNo, setPartNo] = useState("")
     const [partDesc, setPartDesc] = useState("");
     const [cost, setCost] = useState("");
     const [err, setErr] = useState("")
-    const [data, setData] = useState("")
+    const [data, setData] = useState({ data:[]})
     const [searchComplete, setSearchComplete] = useState(false)
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -35,6 +88,7 @@ function PartDataBase() {
         e.preventDefault();
         setErr("")
         setSearchComplete(true)
+        console.log("SearchComplete Status: ", searchComplete)
         try {
 
             const searchFields = new URLSearchParams()
@@ -64,14 +118,17 @@ function PartDataBase() {
            
             const responseData = await response.json()
             setData(responseData)
+            console.log("Type: ", typeof data.data)
 
             if (response.ok){
                     console.log("backend connection successful")
-                    console.log(responseData)
+                    console.log("ResponseData: ",responseData)
+                    console.log("Response Data only value", responseData.data)
+
                 } else {
                     setErr("No response")
                     console.log(err);
-                    setData(null)  
+                    setData([])  
                 }   
 
             }   catch (err) {
@@ -121,52 +178,38 @@ function PartDataBase() {
         
 
         function deletePart(){
-            alert("Ability to delete is under construction")
-         {/*}   e.preventDefault();
-            setErr("");
-
-            if(!vendor || !partNo || !partDesc || !cost) {
-                        setErr("Required field missing");
-                        console.log("Required field missing");
-                        alert("Missing required field")
-                        return;
-                    } else {
-                        try {
-                                console.log("trying to delete")
-                                const response = await fetch("/parts", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify({ vendor, partNo, partDesc, cost }),
-                                });
-            
-                        console.log(response)                    
-            
-                        if (response.ok){
-                            const data = await response.json();
-
-                            console.log(data)
-            
-                        } else {
-                            setErr("No response")
-                            console.log(err);  
-                        } 
-            
-                    }   catch (err) {
-                        
-                        console.log("ERROR");
-                        }
-                    }  */}  
-                    
+            alert("Ability to delete is under construction")             
         }
     
+
+        const columns = useMemo(
+            () => [
+                {
+                    Header: 'Vendor',
+                    accessor: 'vendor',
+                },
+                { 
+                    Header: 'Part#',
+                    accessor: 'partno'
+                },
+                {
+                    Header: 'Description',
+                    accessor: 'partdesc',
+                },
+                {
+                    Header: 'Cost',
+                    accessor: 'cost',
+                }
+            ],
+        []
+        );        
+
     return (
         <>
         {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
         <header><PageHeader /></header>
             <h1>What are we looking for today?</h1>
-
+        <form>
             <input 
                 type="text"                
                 className="buttonpadding" 
@@ -198,7 +241,8 @@ function PartDataBase() {
                 value= { cost }
                 onChange={(e) => setCost(e.target.value)}
             />
-            
+        </form>
+        
             <br></br>
             
             <button onClick={findPart}>Find Part</button>
@@ -206,29 +250,21 @@ function PartDataBase() {
             <button onClick={deletePart}>Delete Part</button>
             <button onClick={clearSearch}>Clear Search</button>
             
+
             <div>
-                <table>
-                    <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Vendor</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Part#</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Description</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Cost</th>
-                    </tr>
-            {data && data.data.length > 0 && searchComplete && data.data.map((parts, index) => (
-                <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.vendor}</td>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partno}</td> 
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{parts?.partdesc}</td>
-                    <td style={{marginLeft: '10px'}}>{parts?.cost}</td>
-                 </tr>
-            )
-            )}
-            </table>
-        </div>
+                    <Table columns={columns} data={data.data.map(item => ({
+                        ...item,
+                        vendor: item.vendor === null ? '' : item.vendor,
+                        partno: item.partno === null ? '' : item.partno,
+                        partdesc: item.partdesc === null ? '' : item.partdesc,
+                        cost: item.cost === null ? '' : item.cost,
+                    }))} 
+                    />
+            </div>
         </>
-    )
-       }
-    
+    );
+}
+
 
 
 export default PartDataBase;

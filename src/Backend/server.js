@@ -236,6 +236,7 @@ app.get("/parts", async (req, res) => {
         const [results] = await app.db.query(search, params)
 
         if(results.length > 0) {
+            console.log("Result format: ", results)
             return res.status(200).json({success: true, message: "Part found", data: results});
     } else {
         console.error("Part not found");
