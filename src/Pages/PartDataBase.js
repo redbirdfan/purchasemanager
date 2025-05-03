@@ -4,66 +4,68 @@ import PageHeader from "../Components/PageHeader";
 import "./InputBox.css"
 import { useTable, useSortBy } from 'react-table'
 
-function PartDataBase() {
 
-    function Table({ columns, data }) {
-        console.log("Table received props: ", {columns, data})
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-            },
-            useSortBy
-        );
-    
-        return (
-            <table {...getTableProps()}>
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()} style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px' }}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ marginRight: '80px', marginLeft: '10px', cursor: 'pointer' }}>
-                                    {column.render('Header')}
-                                    <span>
-                                        {column.isSorted
-                                            ? column.isSortedDesc
-                                                ? ' 🔽'
-                                                : ' 🔼'
-                                            : ''}
-                                    </span>
-                                </th>
-                            ))}
+function Table({ columns, data }) {
+    console.log("Table received props: ", {columns, data})
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+    } = useTable(
+        {
+            columns,
+            data,
+        },
+        useSortBy
+    );
+
+    return (
+        <table {...getTableProps()}>
+            <thead>
+                {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                {column.render('Header')}
+                                <span>
+                                    {column.isSorted
+                                        ? column.isSortedDesc
+                                            ? ' 🔽'
+                                            : ' 🔼'
+                                        : ''}
+                                </span>
+                            </th>
+                        ))}
+                    </tr>
+                ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+                {rows.map((row, i) => {
+                    prepareRow(row);
+                    return (
+                        <tr {...row.getRowProps()} >
+                            {row.cells.map(cell => {
+                                return <td {...cell.getCellProps()} >{cell.render('Cell')}</td>
+                            })}
                         </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>
-                                {row.cells.map(cell => {
-                                    return <td {...cell.getCellProps()} style={{ marginRight: '80px', marginLeft: '10px' }}>{cell.render('Cell')}</td>
-                                })}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        );
-    }
+                    );
+                })}
+            </tbody>
+        </table>
+    );
+}
+
+
+function PartDataBase() {
         
     const [vendor, setVendor] = useState("");
     const [partNo, setPartNo] = useState("")
     const [partDesc, setPartDesc] = useState("");
     const [cost, setCost] = useState("");
     const [err, setErr] = useState("")
-    const [data, setData] = useState({ data:[]})
+    const [data, setData] = useState({data: []})
     const [searchComplete, setSearchComplete] = useState(false)
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -77,7 +79,7 @@ function PartDataBase() {
         setPartDesc('')
         setCost('')
         setErr('')
-        setData('')
+        setData({ data: []})
         setSearchComplete(false)
         console.log("data and fields wiped")
         console.log('vendor:' +vendor)
@@ -128,7 +130,7 @@ function PartDataBase() {
                 } else {
                     setErr("No response")
                     console.log(err);
-                    setData([])  
+                    setData({ data: []})  
                 }   
 
             }   catch (err) {
@@ -202,12 +204,13 @@ function PartDataBase() {
                 }
             ],
         []
-        );        
-
+        );   
+        console.log("Columns: ", columns)     
+        console.log("Prerender: ", data)
     return (
         <>
         {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
-        <header><PageHeader /></header>
+        <header><PageHeader /></header> 
             <h1>What are we looking for today?</h1>
         <form>
             <input 
