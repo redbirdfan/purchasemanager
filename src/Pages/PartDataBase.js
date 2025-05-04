@@ -1,8 +1,9 @@
 import React from "react";
 import {useState, useMemo} from "react";
 import PageHeader from "../Components/PageHeader";
-import "./InputBox.css"
+import './InputBox.css'
 import { useTable, useSortBy } from 'react-table'
+import '../Table.css'
 
 
 function Table({ columns, data }) {
@@ -22,7 +23,7 @@ function Table({ columns, data }) {
     );
 
     return (
-        <table {...getTableProps()}>
+        <table className="table-spacing" {...getTableProps()}>
             <thead>
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
@@ -40,7 +41,7 @@ function Table({ columns, data }) {
                         ))}
                     </tr>
                 ))}
-            </thead>
+            </thead >
             <tbody {...getTableBodyProps()}>
                 {rows.map((row, i) => {
                     prepareRow(row);
@@ -244,7 +245,7 @@ function PartDataBase() {
                 value= { cost }
                 onChange={(e) => setCost(e.target.value)}
             />
-        </form>
+
         
             <br></br>
             
@@ -252,7 +253,7 @@ function PartDataBase() {
             <button onClick={newPart}>Add Part</button>
             <button onClick={deletePart}>Delete Part</button>
             <button onClick={clearSearch}>Clear Search</button>
-            
+        </form>    
 
             <div>
                     <Table columns={columns} data={data.data.map(item => ({

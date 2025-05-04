@@ -1,127 +1,191 @@
 import React from "react";
-import {useState, useEffect, useContext} from "react";
+import { useState, useMemo, useEffect, useContext } from "react";
 import PageHeader from "../Components/PageHeader";
+import { useTable, useSortBy } from "react-table";
+import "../Table.css";
+
+function Table({ columns, data }) {
+  console.log("Table received props: ", { columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+      },
+      useSortBy
+    );
+
+  return (
+    <table className="table-spacing" {...getTableProps()}>
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render("Header")}
+                <span>
+                  {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
+                </span>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row, i) => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell) => {
+                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
 
 function SearchOrder() {
+  const [orderno, setOrderno] = useState("");
+  const [username, setUsername] = useState("");
+  const [orderDate, setDate] = useState("");
+  const [vendor, setVendor] = useState("");
+  const [received, setReceived] = useState(null);
+  const [partno, setPartno] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
 
-    
-    const [orderno, setOrderno] = useState("")
-    const [username, setUsername] = useState("")
-    const [orderDate, setDate] = useState(""); 
-    const [vendor, setVendor] = useState("");
-    const [received, setReceived] = useState(null)
-    const [partno, setPartno] = useState('')
-    const [loading, setLoading] =useState(true);
-    const [err, setErr] = useState('');
-    
-    const [data, setData] = useState();
-    
+  const [data, setData] = useState();
 
-    const findOrder = async (e) => {
-        e.preventDefault();
-        setErr("")
-        
-        try {
-            console.log("CAlling findOrder")
-            const searchOrders = new URLSearchParams()
-            console.log("SearchOrder before adding: ", searchOrders)    
+  const findOrder = async (e) => {
+    e.preventDefault();
+    setErr("");
 
-            if(orderno){
-                searchOrders.append("orderno", orderno)
-            }
-            
-            if(vendor){
-                searchOrders.append("vendor", vendor)
-            }
+    try {
+      console.log("CAlling findOrder");
+      const searchOrders = new URLSearchParams();
+      console.log("SearchOrder before adding: ", searchOrders);
 
-            if(partno){
-                searchOrders.append("partno", partno)
-            }
+      if (orderno) {
+        searchOrders.append("orderno", orderno);
+      }
 
+      if (vendor) {
+        searchOrders.append("vendor", vendor);
+      }
 
-            console.log("Looking for: ", searchOrders)
+      if (partno) {
+        searchOrders.append("partno", partno);
+      }
 
-            const response = await fetch(`/orders?${searchOrders}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-                console.log("Calling for get orders")
+      console.log("Looking for: ", searchOrders);
 
-            const responseData = await response.json()
-            setData(responseData)
-            console.log("Response Date", responseData)
-            if (response.ok){
-                    console.log("backend connection successful")
-                    console.log(responseData)
-                } else {
-                    setErr("No response")
-                    console.log(err);
-                    setData(null)  
-                }   
+      const response = await fetch(`/orders?${searchOrders}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Calling for get orders");
 
-            }
-            catch (err) {
-            console.log("ERROR", err);
-            }
-        }
-            
-    
+      const responseData = await response.json();
+      setData(responseData);
+      console.log("Response Date", responseData);
+      if (response.ok) {
+        console.log("backend connection successful");
+        console.log(responseData);
+      } else {
+        setErr("No response");
+        console.log(err);
+        setData(null);
+      }
+    } catch (err) {
+      console.log("ERROR", err);
+    }
+  };
 
-function formatDate(dateString) {
-    if (!dateString) return ''; 
-  
+  function formatDate(dateString) {
+    if (!dateString) return "";
+
     const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
-  
+
     return `${month}/${day}/${year}`;
   }
 
-    return (
-            <>
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Order#",
+        accessor: "orderno",
+      },
+      {
+        Header: "Vendor",
+        accessor: "vendor",
+      },
+      {
+        Header: "Part#",
+        accessor: "partno",
+      },
+      {
+        Header: "Description",
+        accessor: "partdesc",
+      },
+      {
+        Header: "Quantity",
+        accessor: "Qty",
+      },
+      {
+        Header: "Cost",
+        accessor: "cost",
+      },
+      { 
+        Header: "Total", 
+        accessor: "total" },
+    {
+        Header: 'Received',
+        accessor: 'received',
+    },
+    ],
+    []
+  );
 
-            <header><PageHeader /></header>
-            <input 
-                type = "text" 
-                placeholder ="Order Number"
-                value = { orderno }
-                onChange={(e) => setOrderno(e.target.value)}
-            />
-            
-            <button onClick={findOrder}>Find Order</button>
-           
-            <div> 
-                <table>
-                    <tr style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                        <th style={{marginRight: '80px', marginLeft: '10px'}}>Vendor</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Part#</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Description</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Cost</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Quantity</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Total</th>
-                        <th style={{marginRight: '80px', marginLeft: '20px'}}>Received Status</th>
-                    </tr>
-                    
-            {data && data.data.length > 0 && data.data.map((orders, index) => (
-                <tr key = {index} style={{display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '5px'}}>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.vendor}</td>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partno}</td>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.partdesc}</td> 
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.cost}</td>
-                    <td style={{marginRight: '80px', marginLeft: "10px"}}>{orders?.quantity}</td>
-                    <td style={{marginRight: '80px', marginLeft: '10px'}}>{orders?.total}</td>
-                    <td style={{marginLeft: '10px'}}>{orders?.received}</td>
-                </tr>
-                )
-            )}
-                </table>
+  return (
+    <>
+      <header>
+        <PageHeader />
+      </header>
+      <form>
+        <input
+          type="text"
+          placeholder="Order Number"
+          value={orderno}
+          onChange={(e) => setOrderno(e.target.value)}
+        />
+
+        <button onClick={findOrder}>Find Order</button>
+      </form>
+      <div>
+                    <Table columns={columns} data={data.data.map(order => ({
+                        ...item,
+                        orderno: order.orderno === null ? '' : order.orderno,
+                        vendor: order.vendor === null ? '' : order.vendor,
+                        partno: order.partno === null ? '' : order.partno,
+                        partdesc: order.partdesc === null ? '' : order.partdesc,
+                        quantity: order.quantity === null ? '' : order.quantity,
+                        cost: order.cost === null ? '' : order.cost,
+                        total: order.total === null ? '' : order.total,
+                        received: order.received === null ? '' : order.received,
+                    }))} 
+                    />
             </div>
-        </>
-    
-        )
+       
+    </>
+  );
 }
 
 export default SearchOrder;
