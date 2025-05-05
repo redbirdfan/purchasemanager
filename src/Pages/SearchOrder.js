@@ -57,7 +57,7 @@ function SearchOrder() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
-  const [data, setData] = useState();
+  const [data, setData] = useState({ data: []});
 
   const findOrder = async (e) => {
     e.preventDefault();
@@ -99,7 +99,7 @@ function SearchOrder() {
       } else {
         setErr("No response");
         console.log(err);
-        setData(null);
+        setData({data: []});
       }
     } catch (err) {
       console.log("ERROR", err);
@@ -137,7 +137,7 @@ function SearchOrder() {
       },
       {
         Header: "Quantity",
-        accessor: "Qty",
+        accessor: "quantity",
       },
       {
         Header: "Cost",
@@ -171,7 +171,7 @@ function SearchOrder() {
       </form>
       <div>
                     <Table columns={columns} data={data.data.map(order => ({
-                        ...item,
+                        ...order,
                         orderno: order.orderno === null ? '' : order.orderno,
                         vendor: order.vendor === null ? '' : order.vendor,
                         partno: order.partno === null ? '' : order.partno,
