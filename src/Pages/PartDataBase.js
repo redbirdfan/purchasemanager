@@ -51,10 +51,13 @@ function Table({ columns, data }) {
               })}
               <Popup trigger={<button>Edit Part</button>} modal nested>
                 {(close) => (
-                  <div>
-                    <div>Edit Popup working!</div>
-                    <div>
-                      <button onClick={() => close()}>Save Edits</button>
+                  <div style={{backgroundColor: 'gray', width: '300px', height: '300'}}>
+                    <div>Vendor: </div>
+                    <div>Part#: </div>
+                    <div>Description: </div>
+                    <div>Cost: </div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                      <button onClick={() => close()} style={{ backgroundColor: 'black', color: 'whitesmoke'}}>Save Edits</button>
                     </div>
                   </div>
                 )}
