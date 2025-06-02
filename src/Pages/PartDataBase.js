@@ -51,11 +51,19 @@ function Table({ columns, data }) {
               })}
               <Popup trigger={<button>Edit Part</button>} modal nested>
                 {(close) => (
-                  <div style={{backgroundColor: 'gray', width: '300px', height: '300'}}>
-                    <div>Vendor: </div>
-                    <div>Part#: </div>
-                    <div>Description: </div>
-                    <div>Cost: </div>
+                  <div style={{backgroundColor: 'gray', width: '450px', height: '450'}}>
+                    <div>Vendor: 
+                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder= "Vendor position" readOnly/>
+                    </div>
+                    <div>Part#: 
+                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part# here"/>
+                    </div>
+                    <div>Description: 
+                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part Description"/>
+                    </div>
+                    <div>Cost: 
+                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part cost here" />
+                    </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                       <button onClick={() => close()} style={{ backgroundColor: 'black', color: 'whitesmoke'}}>Save Edits</button>
                     </div>
@@ -218,7 +226,7 @@ function PartDataBase() {
         <PageHeader />
       </header>
       <h1>What are we looking for today?</h1>
-      <form>
+      <form style={{display: 'flex', justifyContent: 'center'}}>
         <input
           type="text"
           className="buttonpadding"
@@ -250,14 +258,15 @@ function PartDataBase() {
           value={cost}
           onChange={(e) => setCost(e.target.value)}
         />
-
+</form>
         <br></br>
-
+      <div style={{display: 'flex', justifyContent: 'center'}}>
         <button onClick={findPart}>Find Part</button>
         <button onClick={newPart}>Add Part</button>
         <button onClick={deletePart}>Delete Part</button>
         <button onClick={clearSearch}>Clear Search</button>
-      </form>
+      </div>
+      
 
       <div>
         <Table
