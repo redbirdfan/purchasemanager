@@ -279,16 +279,66 @@ function PartDataBase() {
         <Popup open={true} modal nested onClose={handleCloseEdit}>
           {(close) => {
             return(
+              <>
             <div>
-              <h1>Editing Part: {partToEdit.partno}</h1>
+            <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
+            <h1>Editing Part</h1>
+            <div>VEND- 
+              <input value={partToEdit.vendor} readOnly/>
             </div>
+            <div>
+              PART-
+              <input value={partToEdit.partno}/>
+            </div>
+            <div>
+              DESC-
+              <input value={partToEdit.partdesc}/>
+            </div>
+            <div>
+              COST-
+              <input value={partToEdit.cost} numbers/>
+            </div>
+            <button>Save Changes</button>
+            </form>
+            </div>
+            </>
             );
-          }
-        }
-     </Popup>
-      )
-    }
-      
+          }}
+        </Popup>
+      )}
+
+            {partToDelete && (
+        <Popup open={true} modal nested onClose={handleCloseEdit}>
+          {(close) => {
+            return(
+              <>
+            <div>
+            <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
+            <h3>Do you really want to delete this part?</h3>
+            <div>VEND- 
+              <input value={partToDelete.vendor} readOnly/>
+            </div>
+            <div>
+              PART-
+              <input value={partToDelete.partno} readOnly/>
+            </div>
+            <div>
+              DESC-
+              <input value={partToDelete.partdesc} readOnly/>
+            </div>
+            <div>
+              COST-
+              <input value={partToDelete.cost} readOnly/>
+            </div>
+            <button>Delete Part</button>
+            </form>
+            </div>
+            </>
+            );
+          }}
+        </Popup>
+      )}
+
 </>
 
   );
