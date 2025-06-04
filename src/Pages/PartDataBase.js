@@ -6,14 +6,7 @@ import { useTable, useSortBy } from "react-table";
 import "../Table.css";
 import Popup from "reactjs-popup";
 
-function Table({ columns, data }) {
-  function editPart() {
-    alert("edit under construction");
-  }
-
-  function deletePart() {
-    alert("Ability to delete is under construction");
-  }
+function Table({ columns, data, handleEditClick, handleDeleteClick }) {
 
   console.log("Table received props: ", { columns, data });
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -42,35 +35,17 @@ function Table({ columns, data }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
+        {rows.map((row) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                return <td {...cell.getCellProps()} key={cell.column.id}>
+                  {cell.render("Cell")}
+                </td>;
               })}
-              <Popup trigger={<button>Edit Part</button>} modal nested>
-                {(close) => (
-                  <div style={{backgroundColor: 'gray', width: '450px', height: '450'}}>
-                    <div>Vendor: 
-                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder= "Vendor position" readOnly/>
-                    </div>
-                    <div>Part#: 
-                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part# here"/>
-                    </div>
-                    <div>Description: 
-                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part Description"/>
-                    </div>
-                    <div>Cost: 
-                      <input style={{display: 'flex', justifyContent: 'center'}} placeholder="Part cost here" />
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'center'}}>
-                      <button onClick={() => close()} style={{ backgroundColor: 'black', color: 'whitesmoke'}}>Save Edits</button>
-                    </div>
-                  </div>
-                )}
-              </Popup>
-              <button>Delete Part</button>
+              <button onClick={() => handleEditClick(row.original)}>Edit Part</button>
+              <button onClick={() => handleDeleteClick(row.original)}>Delete Part</button>
             </tr>
           );
         })}
@@ -91,6 +66,24 @@ function PartDataBase() {
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(true);
   const [popout, setPopout] = useState(false);
+  const [partToEdit, setPartToEdit] = useState(null);
+  const [partToDelete, setPartToDelete] = useState(null);
+
+  const handleEditClick = (partData) => {
+    setPartToEdit(partData);
+  };
+
+  const handleDeleteClick = (partData) => {
+    setPartToDelete(partData)
+  }
+
+  const handleCloseEdit = () => {
+    setPartToEdit(null);
+  }
+
+  const handleCloseDelete = () =>{
+    setPartToDelete(null);
+  }
 
   function clearSearch() {
     setVendor("");
@@ -277,10 +270,27 @@ function PartDataBase() {
             partno: item.partno === null ? "" : item.partno,
             partdesc: item.partdesc === null ? "" : item.partdesc,
             cost: item.cost === null ? "" : item.cost,
-          }))}
+          }))}  
+           handleEditClick={handleEditClick} 
+           handleDeleteClick={handleDeleteClick}          
         />
       </div>
-    </>
+      {partToEdit && (
+        <Popup open={true} modal nested onClose={handleCloseEdit}>
+          {(close) => {
+            return(
+            <div>
+              <h1>Editing Part: {partToEdit.partno}</h1>
+            </div>
+            );
+          }
+        }
+     </Popup>
+      )
+    }
+      
+</>
+
   );
 }
 

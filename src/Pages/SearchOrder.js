@@ -159,7 +159,7 @@ function SearchOrder() {
       <header>
         <PageHeader />
       </header>
-      <form>
+      <form style={{display: 'flex', justifyContent: 'center'}}>
         <input
           type="text"
           placeholder="Order Number"
