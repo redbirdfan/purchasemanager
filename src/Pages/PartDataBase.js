@@ -66,24 +66,98 @@ function PartDataBase() {
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(true);
   const [popout, setPopout] = useState(false);
+  
   const [partToEdit, setPartToEdit] = useState(null);
   const [partToDelete, setPartToDelete] = useState(null);
+  
+  const [originalPartToEdit, setOriginalPartToEdit] =useState("");
+  const [originalEditVendor, setOriginalEditVendor] = useState("");
+  const [originalEditPartNo, setOriginalEditPartNo] = useState("");
+  const [originalEditPartDesc, setOriginalEditPartDesc] = useState("");
+  const [originalEditCost, setOriginalEditCost] = useState("");
+  
+  const [editVendor, setEditVendor] = useState("");
+  const [editPartNo, setEditPartNo] = useState("");
+  const [editPartDesc, setEditPartDesc] = useState("");
+  const [editCost, setEditCost] = useState("");
+  
+  const [deleteVendor, setDeleteVendor] = useState("");
+  const [deletePartNo, setDeletePartNo] = useState("");
+  const [deletePartDesc, setDeletePartDesc] = useState("");
+  const [deleteCost, setDeleteCost] = useState("");
+
 
   const handleEditClick = (partData) => {
+    console.log("handleEditClick launching")
     setPartToEdit(partData);
+    setOriginalPartToEdit(partData);
+    setOriginalEditVendor(partData.vendor);
+    setOriginalEditPartNo(partData.partno);
+    setOriginalEditPartDesc(partData.partdesc);
+    setOriginalEditCost(partData.cost);
   };
 
   const handleDeleteClick = (partData) => {
-    setPartToDelete(partData)
+    console.log("handleDeleteClick launching")
+    setPartToDelete(partData);
+    setDeleteVendor(partData.vendor);
+    setDeletePartNo(partData.partno);
+    setDeletePartDesc(partData.partdesc);
+    setDeleteCost(partData.cost);
   }
 
   const handleCloseEdit = () => {
+    console.log("Close edit launching properly")
     setPartToEdit(null);
   }
 
   const handleCloseDelete = () =>{
+    console.log("Close delete launching properly")
     setPartToDelete(null);
   }
+
+  const handleSavePartChanges = async () => {
+    console.log("handleSavePartChanges launching")
+    console.log("Part to Edit: ", partToEdit)
+    try{
+       const updatedPart = {
+        vendor: editVendor,
+        partno: editPartNo,
+        partdesc: editPartDesc,
+        cost: editCost,
+      };
+
+      console.log("Saving changes for part:", updatedPart);
+      
+      if(originalEditVendor === updatedPart.vendor &&
+        originalEditPartno === updatedPart.partno &&
+        originalEditPartDesc === updatedPart.partdesc &&
+        originalEditCost === updatedPart.cost){
+        console.log("No changes were made")
+        handleCloseEdit()
+        return
+      } else {
+      const response = await fetch(`/UpdateParts/${partToEdit}+${data}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(partToEdit),
+      });
+
+      if (response.ok) {
+        console.log("Part updated successfully!");
+        findPart({ preventDefault: () => {} });
+        handleCloseEdit(); 
+      } else {
+        console.error("Failed to update part:", response.statusText);
+      }
+    }  
+  } catch (error) {
+      console.error("Error saving changes:", error);
+      }
+    }
+
 
   function clearSearch() {
     setVendor("");
@@ -93,15 +167,12 @@ function PartDataBase() {
     setErr("");
     setData({ data: [] });
     setSearchComplete(false);
-    console.log("data and fields wiped");
-    console.log("vendor:" + vendor);
   }
 
   const findPart = async (e) => {
     e.preventDefault();
     setErr("");
     setSearchComplete(true);
-    console.log("SearchComplete Status: ", searchComplete);
     try {
       const searchFields = new URLSearchParams();
 
@@ -130,10 +201,9 @@ function PartDataBase() {
 
       const responseData = await response.json();
       setData(responseData);
-      console.log("Type: ", typeof data.data);
 
       if (response.ok) {
-        console.log("backend connection successful");
+        console.log("backend Search connection successful");
         console.log("ResponseData: ", responseData);
         console.log("Response Data only value", responseData.data);
       } else {
@@ -182,12 +252,6 @@ function PartDataBase() {
     }
   };
 
-  function editPart() {
-    alert("edit under construction");
-  }
-  function deletePart() {
-    alert("Ability to delete is under construction");
-  }
 
   const columns = useMemo(
     () => [
@@ -210,8 +274,7 @@ function PartDataBase() {
     ],
     []
   );
-  console.log("Columns: ", columns);
-  console.log("Prerender: ", data);
+
   return (
     <>
       {loading === false && <p>{"User: " + firstName + " " + lastName}</p>}
@@ -255,8 +318,7 @@ function PartDataBase() {
         <br></br>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <button onClick={findPart}>Find Part</button>
-        <button onClick={newPart}>Add Part</button>
-        <button onClick={deletePart}>Delete Part</button>
+        <button onClick={newPart}>Create Part</button>
         <button onClick={clearSearch}>Clear Search</button>
       </div>
       
@@ -284,21 +346,22 @@ function PartDataBase() {
             <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
             <h1>Editing Part</h1>
             <div>VEND- 
-              <input value={partToEdit.vendor} readOnly/>
+              <input value={partToEdit.vendor} onLoad={(e)=>setVendorToEdit(e.target.value)} readOnly/>
             </div>
             <div>
               PART-
-              <input value={partToEdit.partno}/>
+              <input value={partToEdit.partno} onChange={(e) => setEditPartNo(e.target.value)}/>
             </div>
             <div>
               DESC-
-              <input value={partToEdit.partdesc}/>
+              <input value={partToEdit.partdesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
             </div>
             <div>
               COST-
-              <input value={partToEdit.cost} numbers/>
+              <input value={partToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
             </div>
-            <button>Save Changes</button>
+            <button onClick={handleSavePartChanges}>Save Changes</button>
+            <button onClick={handleCloseEdit}>Cancel</button>
             </form>
             </div>
             </>
@@ -308,7 +371,7 @@ function PartDataBase() {
       )}
 
             {partToDelete && (
-        <Popup open={true} modal nested onClose={handleCloseEdit}>
+        <Popup open={true} modal nested onClose={handleCloseDelete}>
           {(close) => {
             return(
               <>

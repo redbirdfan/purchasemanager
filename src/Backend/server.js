@@ -432,6 +432,42 @@ app.post("/parts", async(req, res) => {
                 }
             });
 
+        app.post("/UpdateParts", async(req, res) => {
+            let errors = [];
+            console.log("edit part req body: ", req)
+            console.log("Update parts being called")
+            frontendData = req.body
+            console.log("Trying to update order, Frontend sent: ", frontendData)
+            const partData = frontendData
+            console.log("OrderData value: ", partData)
+
+            try{
+                for (const line of partData){
+                const [vendor, partno, partdesc, cost] = line;   
+                const post = 'INSERT INTO parts (ovendor, partno, partdesc, cost) VALUES (?,?,?,?)'
+            
+                await new Promise((resolve, reject) => {
+                app.db.query(post, [vendor, partno, partdesc, cost], (err, results) => {
+                    if(err) {
+                        console.err("Error editing part", err)
+                        errors.push(err)
+                        reject(err);
+                    } else{
+                        res.status(200).json({ message: "Part updated successfully" })
+                        console.log("Part edited successfully: ", results)
+                        resolve(results)
+                        }
+                    });
+                });
+            }
+            
+            res.status(200).json({ message: "Part edited successfully" });
+        } catch (error){
+            console.log("Order could not be created")
+        }
+    });
+
+
 
 }
 
