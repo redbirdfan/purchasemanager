@@ -368,7 +368,7 @@ function PartDataBase() {
             );
           }}
         </Popup>
-      )}
+)}
 
             {partToDelete && (
         <Popup open={true} modal nested onClose={handleCloseDelete}>
