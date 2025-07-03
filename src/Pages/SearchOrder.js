@@ -5,7 +5,7 @@ import { useTable, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import "../Table.css";
 
-function Table({ columns, data }) {
+function Table({ columns, data, handleEditClick }) {
   console.log("Table received props: ", { columns, data });
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
@@ -42,7 +42,7 @@ function Table({ columns, data }) {
                 return <td {...cell.getCellProps()}>
                   {cell.render("Cell")}</td>;
               })}
-              <button>Edit</button>
+              <button onClick={() => handleEditClick(row.original)}>Edit</button>
             </tr>
           );
         })}
@@ -62,23 +62,41 @@ function SearchOrder() {
   const [err, setErr] = useState("");
   const [data, setData] = useState({ data: []});
   
-  const [partToEdit, setPartToEdit] = useState(null);
-    const [partToDelete, setPartToDelete] = useState(null);
+  const [rowToEdit, setRowToEdit] = useState(null);
+  const [partToDelete, setPartToDelete] = useState(null);
     
-    const [originalPartToEdit, setOriginalPartToEdit] =useState("");
-    const [originalEditVendor, setOriginalEditVendor] = useState("");
-    const [originalEditPartNo, setOriginalEditPartNo] = useState("");
-    const [originalEditPartDesc, setOriginalEditPartDesc] = useState("");
-    const [originalEditCost, setOriginalEditCost] = useState("");
+  const [originalRowToEdit, setOriginalRowToEdit] =useState("");
+  const [originalEditVendor, setOriginalEditVendor] = useState("");
+  const [originalEditPartNo, setOriginalEditPartNo] = useState("");
+  const [originalEditPartDesc, setOriginalEditPartDesc] = useState("");
+  const [originalEditCost, setOriginalEditCost] = useState("");
+  const [originalEditReceived, setOriginalEditReceived] = useState("");
     
-    const [editVendor, setEditVendor] = useState("");
-    const [editPartNo, setEditPartNo] = useState("");
-    const [editPartDesc, setEditPartDesc] = useState("");
-    const [editCost, setEditCost] = useState("");
+  const [editVendor, setEditVendor] = useState("");
+  const [editPartNo, setEditPartNo] = useState("");
+  const [editPartDesc, setEditPartDesc] = useState("");
+  const [editCost, setEditCost] = useState("");
 
-  function handleEditClick(row, i) {
-    console.log("Edit click launched: ", row, i)
-  };
+  
+  const handleEditClick = (row) => {
+    console.log("Value of Row: ", row);
+    console.log("handleEditClick launching")
+    setRowToEdit(row);
+    setOriginalRowToEdit(row);
+    setOriginalEditVendor(row.vendor);
+    setOriginalEditPartNo(row.partno);
+    setOriginalEditPartDesc(row.partdesc);
+    setOriginalEditCost(row.cost);
+  }
+
+    function handleCancelEdit(){
+    console.log("Calling cancel edit");
+  }
+
+  function handleOrderSaveChanges(){
+    console.log("calling handleOrderSaveChanges");
+  }
+
 
   const findOrder = async (e) => {
     e.preventDefault();
@@ -127,7 +145,7 @@ function SearchOrder() {
     }
   };
 
-  function formatDate(dateString) {
+  {/*function formatDate(dateString) {
     if (!dateString) return "";
 
     const date = new Date(dateString);
@@ -137,7 +155,7 @@ function SearchOrder() {
 
     return `${month}/${day}/${year}`;
   }
-
+*/}
   const columns = useMemo(
     () => [
       {
@@ -202,9 +220,10 @@ function SearchOrder() {
                         total: order.total === null ? '' : order.total,
                         received: order.received === null ? '' : order.received,
                     }))} 
+                    handleEditClick={handleEditClick} 
                     />
             </div>
-   {/*   {rowToEdit && (
+      {rowToEdit && (
                <Popup open={true} modal nested onClose={handleEditClick}>
                  {(close) => {
                    return(
@@ -213,19 +232,23 @@ function SearchOrder() {
                    <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
                    <h1>Order line to Edit</h1>
                    <div>VEND- 
-                     <input value={partToEdit.vendor} onLoad={(e)=>setVendorToEdit(e.target.value)} readOnly/>
+                     <input value={rowToEdit.vendor} onLoad={(e)=>setVendorToEdit(e.target.value)} readOnly/>
                    </div>
                    <div>
                      PART-
-                     <input value={partToEdit.partno} onChange={(e) => setEditPartNo(e.target.value)}/>
+                     <input value={rowToEdit.partno} onChange={(e) => setEditPartNo(e.target.value)}/>
                    </div>
                    <div>
                      DESC-
-                     <input value={partToEdit.partdesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
+                     <input value={rowToEdit.partdesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
                    </div>
                    <div>
                      COST-
-                     <input value={partToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
+                     <input value={rowToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
+                   </div>
+                    Rec'd
+                   <div>
+                     <input value={rowToEdit.received} onChange={(e) => setEditReceived(e.target.value)}/>
                    </div>
                    <button onClick={handleOrderSaveChanges}>Save Changes</button>
                    <button onClick={handleCancelEdit}>Cancel</button>
@@ -235,7 +258,7 @@ function SearchOrder() {
                    );
                  }}
                </Popup>
-             )} */}
+             )} 
     </>
   );
 }
