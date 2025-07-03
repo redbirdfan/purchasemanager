@@ -229,8 +229,8 @@ function SearchOrder() {
                    return(
                      <>
                    <div>
-                   <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
-                   <h1>Order line to Edit</h1>
+                   <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '250px', border: '2px solidd #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
+                   <h1>Editing Order Row</h1>
                    <div>VEND- 
                      <input value={rowToEdit.vendor} onLoad={(e)=>setVendorToEdit(e.target.value)} readOnly/>
                    </div>
@@ -246,12 +246,14 @@ function SearchOrder() {
                      COST-
                      <input value={rowToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
                    </div>
-                    Rec'd
                    <div>
+                    REC'D-
                      <input value={rowToEdit.received} onChange={(e) => setEditReceived(e.target.value)}/>
                    </div>
+                   <div>
                    <button onClick={handleOrderSaveChanges}>Save Changes</button>
                    <button onClick={handleCancelEdit}>Cancel</button>
+                   </div>
                    </form>
                    </div>
                    </>
