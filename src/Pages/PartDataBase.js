@@ -30,7 +30,7 @@ function Table({ columns, data, handleEditClick, handleDeleteClick }) {
                   {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
                 </span>
               </th>
-            ))}
+            ))}d
           </tr>
         ))}
       </thead>

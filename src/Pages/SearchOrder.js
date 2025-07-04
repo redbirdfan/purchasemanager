@@ -37,12 +37,12 @@ function Table({ columns, data, handleEditClick }) {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}
-                style={{backgroundColor: row.i === 1 ? "lightgreen" : "whitesmoke"}}>
+                style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}}>
               {row.cells.map((cell) => {
                 return <td {...cell.getCellProps()}>
                   {cell.render("Cell")}</td>;
               })}
-              <button onClick={() => handleEditClick(row.original)}>Edit</button>
+              <button style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row.original)}>Edit</button>
             </tr>
           );
         })}
@@ -56,14 +56,13 @@ function SearchOrder() {
   const [username, setUsername] = useState("");
   const [orderDate, setDate] = useState("");
   const [vendor, setVendor] = useState("");
-  const [received, setReceived] = useState(false);
+  const [received, setReceived] = useState("");
   const [partno, setPartno] = useState("");
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [data, setData] = useState({ data: []});
   
   const [rowToEdit, setRowToEdit] = useState(null);
-  const [partToDelete, setPartToDelete] = useState(null);
     
   const [originalRowToEdit, setOriginalRowToEdit] =useState("");
   const [originalEditVendor, setOriginalEditVendor] = useState("");
@@ -72,15 +71,15 @@ function SearchOrder() {
   const [originalEditCost, setOriginalEditCost] = useState("");
   const [originalEditReceived, setOriginalEditReceived] = useState("");
     
-  const [editVendor, setEditVendor] = useState("");
+  
   const [editPartNo, setEditPartNo] = useState("");
   const [editPartDesc, setEditPartDesc] = useState("");
   const [editCost, setEditCost] = useState("");
+  const [editTotal, setEditTotal] = useState("");
+  const [editReceived, setEditReceived] = useState("");
 
   
   const handleEditClick = (row) => {
-    console.log("Value of Row: ", row);
-    console.log("handleEditClick launching")
     setRowToEdit(row);
     setOriginalRowToEdit(row);
     setOriginalEditVendor(row.vendor);
@@ -89,13 +88,55 @@ function SearchOrder() {
     setOriginalEditCost(row.cost);
   }
 
-    function handleCancelEdit(){
-    console.log("Calling cancel edit");
+    function handleCloseEdit(){
+    console.log("Calling close edit");
   }
 
-  function handleOrderSaveChanges(){
-    console.log("calling handleOrderSaveChanges");
-  }
+  
+const handleRowSaveChanges = async () => {
+    console.log("handleSavePartChanges launching")
+    console.log("Row to Edit: ", rowToEdit)
+    try{
+       const updatedRow = {
+        vendor: editVendor,
+        partno: editPartNo,
+        partdesc: editPartDesc,
+        cost: editCost,
+        total: editTotal,
+        received: editReceived,
+      };
+
+      console.log("Saving changes for part:", updatedPart);
+      
+      if(originalEditVendor === updatedRow.vendor &&
+        originalEditPartno === updatedRow.partno &&
+        originalEditPartDesc === updatedRow.partdesc &&
+        originalEditCost === updatedRow.cost &&
+        originalEditReceived === updatedRow.received){
+        console.log("No changes were made")
+        handleCloseEdit()
+        return
+      } else {
+      const response = await fetch(`/orders/${rowToEdit}+${data}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(rowToEdit),
+      });
+
+      if (response.ok) {
+        console.log("Row updated successfully!");
+        findRow({ preventDefault: () => {} });
+        handleCloseEdit(); 
+      } else {
+        console.error("Failed to update row:", response.statusText);
+      }
+    }  
+  } catch (error) {
+      console.error("Error saving changes:", error);
+      }
+    }
 
 
   const findOrder = async (e) => {
@@ -224,7 +265,7 @@ function SearchOrder() {
                     />
             </div>
       {rowToEdit && (
-               <Popup open={true} modal nested onClose={handleEditClick}>
+               <Popup open={true} modal nested onClose={handleCloseEdit}>
                  {(close) => {
                    return(
                      <>
@@ -251,8 +292,8 @@ function SearchOrder() {
                      <input value={rowToEdit.received} onChange={(e) => setEditReceived(e.target.value)}/>
                    </div>
                    <div>
-                   <button onClick={handleOrderSaveChanges}>Save Changes</button>
-                   <button onClick={handleCancelEdit}>Cancel</button>
+                   <button onClick={handleRowSaveChanges}>Save Changes</button>
+                   <button onClick={handleCloseEdit}>Cancel</button>
                    </div>
                    </form>
                    </div>
