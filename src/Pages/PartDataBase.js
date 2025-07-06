@@ -63,7 +63,7 @@ function PartDataBase() {
   const [data, setData] = useState({ data: [] });
   const [searchComplete, setSearchComplete] = useState(false);
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [lastName, setLasftName] = useState("");
   const [loading, setLoading] = useState(true);
   const [popout, setPopout] = useState(false);
   
@@ -95,6 +95,10 @@ function PartDataBase() {
     setOriginalEditPartNo(partData.partno);
     setOriginalEditPartDesc(partData.partdesc);
     setOriginalEditCost(partData.cost);
+    setEditVendor(partData.vendor);
+    setEditPartNo(partData.partno);
+    setEditPartDesc(partData.partdesc);
+    setEditCost(partData.cost);
   };
 
   const handleDeleteClick = (partData) => {
@@ -346,19 +350,19 @@ function PartDataBase() {
             <form style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', height: '200px', border: '2px solid #333', backgroundColor: 'gray', borderRadius: '8px',}}>  
             <h1>Editing Part</h1>
             <div>VEND- 
-              <input value={partToEdit.vendor} onLoad={(e)=>setVendorToEdit(e.target.value)} readOnly/>
+              <input value={editVendor} onLoad={(e)=>setPartToEdit.vendor(e.target.value)} readOnly/>
             </div>
             <div>
               PART-
-              <input value={partToEdit.partno} onChange={(e) => setEditPartNo(e.target.value)}/>
+              <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)}/>
             </div>
             <div>
               DESC-
-              <input value={partToEdit.partdesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
+              <input value={editPartDesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
             </div>
             <div>
               COST-
-              <input value={partToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
+              <input value={editCost} onChange={(e) => setEditCost(e.target.value)} numbers/>
             </div>
             <button onClick={handleSavePartChanges}>Save Changes</button>
             <button onClick={handleCloseEdit}>Cancel</button>

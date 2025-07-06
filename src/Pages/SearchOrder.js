@@ -70,14 +70,14 @@ function SearchOrder() {
   const [originalEditPartDesc, setOriginalEditPartDesc] = useState("");
   const [originalEditCost, setOriginalEditCost] = useState("");
   const [originalEditReceived, setOriginalEditReceived] = useState("");
-    
+  const [originalQuantity, setOriginalQuantity] = useState("");
   
   const [editPartNo, setEditPartNo] = useState("");
   const [editPartDesc, setEditPartDesc] = useState("");
   const [editCost, setEditCost] = useState("");
   const [editTotal, setEditTotal] = useState("");
   const [editReceived, setEditReceived] = useState("");
-
+  const [editQuantity, setEditQuantity] = useState("");
   
   const handleEditClick = (row) => {
     setRowToEdit(row);
@@ -86,6 +86,13 @@ function SearchOrder() {
     setOriginalEditPartNo(row.partno);
     setOriginalEditPartDesc(row.partdesc);
     setOriginalEditCost(row.cost);
+    setOriginalQuantity(row.quantity)
+    setEditPartNo(row.partno);
+    setEditPartDesc(row.partdesc);
+    setEditCost(row.cost);
+    setEditQuantity(row.quantity);
+    setEditTotal(row.cost * row.quantity);
+    setEditReceived(row.received);
   }
 
     function handleCloseEdit(){
@@ -277,19 +284,27 @@ const handleRowSaveChanges = async () => {
                    </div>
                    <div>
                      PART-
-                     <input value={rowToEdit.partno} onChange={(e) => setEditPartNo(e.target.value)}/>
+                     <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)}/>
                    </div>
                    <div>
                      DESC-
-                     <input value={rowToEdit.partdesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
+                     <input value={editPartDesc} onChange={(e) => setEditPartDesc(e.target.value)}/>
                    </div>
                    <div>
                      COST-
-                     <input value={rowToEdit.cost} onChange={(e) => setEditCost(e.target.value)} numbers/>
+                     <input value={editCost} onChange={(e) => setEditCost(e.target.value)} numbers/>
+                   </div>
+                   <div>
+                      QTY-
+                      <input value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} numbers/>
+                   </div>
+                   <div>
+                      TOTAL-
+                      <input value={editTotal}/>
                    </div>
                    <div>
                     REC'D-
-                     <input value={rowToEdit.received} onChange={(e) => setEditReceived(e.target.value)}/>
+                     <input value={editReceived} onChange={(e) => setEditReceived(e.target.value)}/>
                    </div>
                    <div>
                    <button onClick={handleRowSaveChanges}>Save Changes</button>
