@@ -35,17 +35,18 @@ function Table({ columns, data, handleEditClick, handleDeleteClick }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} key={row.id}>
+            <tr {...row.getRowProps()} key={row.id} style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}}>
+              
               {row.cells.map((cell) => {
                 return <td {...cell.getCellProps()} key={cell.column.id}>
                   {cell.render("Cell")}
                 </td>;
               })}
-              <button onClick={() => handleEditClick(row.original)}>Edit Part</button>
-              <button onClick={() => handleDeleteClick(row.original)}>Delete Part</button>
+              <button style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row.original)}>Edit Part</button>
+              <button style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row.original)}>Delete Part</button>
             </tr>
           );
         })}
