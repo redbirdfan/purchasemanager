@@ -290,11 +290,11 @@ app.post("/parts", async(req, res) => {
         app.delete("/parts", async(req, res) => {
             console.log("Delete request received");
             console.log("Req body: ", req)
-            
-            const vendor = req.body.vendor;
-            const partNo = req.body.partno;
-            const partDesc = req.body.partdesc
-            const cost = req.body.cost;
+
+            const vendor = req.body.deleteVendor;
+            const partNo = req.body.deletePartno;
+            const partDesc = req.body.deletePartdesc
+            const cost = req.body.deleteCost;
 
             try{
                 const deletePart = 'DELETE FROM parts WHERE vendor = ? AND partno = ? AND partdesc = ? AND cost = ?'

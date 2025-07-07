@@ -121,7 +121,7 @@ function PartDataBase() {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({deleteVendor, deleltePartNo, deletePartDesc, deleteCost}),
+        body: JSON.stringify({deleteVendor, deletePartNo, deletePartDesc, deleteCost}),
       });
       console.log("DELETE response: ", response);
     
