@@ -287,7 +287,35 @@ app.post("/parts", async(req, res) => {
                 }
         }) 
         
+        app.delete("/parts", async(req, res) => {
+            console.log("Delete request received");
 
+            const vendor = req.body.vendor;
+            const partNo = req.body.partno;
+            const partDesc = req.body.partdesc
+            const cost = req.body.cost;
+
+            try{
+                const deletePart = 'DELETE FROM parts WHERE vendor = ? AND partno = ? AND partdesc = ? AND cost = ?'
+
+                const [results] = await app.db.query(deletePart [vendor, partNo, partDesc, cost]);
+                
+                 console.log("Returned from search: " + results)
+                 
+                    if (deletePart.affectedRows >  0) {
+                        return res.status(201).json({success: true, message: "Part deleted"});
+    
+                    } else {
+                        console.error("Part not deleted")
+                        return res.status(500).json({ success: false, message: 'Error deleting part, no rows effected'});
+                    }
+            } catch (error) {
+                console.error("Part not deleted", error);
+                return res.status(500).json({ success: false, message: "Internal Server Error" });
+                }
+
+        });
+        
         app.get("/orders", async (req, res) => {
             const {orderno, vendor, partno} = req.query;
             console.log("Order search: ", req.query)

@@ -102,14 +102,46 @@ function PartDataBase() {
     setEditCost(partData.cost);
   };
 
-  const handleDeleteClick = (partData) => {
-    console.log("handleDeleteClick launching")
+  function handleDeleteClick(partData) {
+    console.log("handleDeleteClick launching, asigning partData to setPartToDelete")
+    console.log("Part Data: ", partData)
     setPartToDelete(partData);
     setDeleteVendor(partData.vendor);
     setDeletePartNo(partData.partno);
     setDeletePartDesc(partData.partdesc);
     setDeleteCost(partData.cost);
   }
+
+  const handlePartDelete = async (partToDelete) => {
+    console.log("(partToDelete Value) Launching when popup call delete clicked: ", partToDelete);
+    try{
+      console.log("Attempting to delete part: ", partToDelete);
+      const response = await fetch("/parts", {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(partToDelete),
+      });
+      console.log("DELETE response: ", response);
+    
+       if (response.ok) {
+                const data = await response.json(); 
+                console.log("Part deleted successfully:", data);
+                setErr("Part deleted successfully!"); 
+      
+            } else {
+                const errorData = await response.json();
+                const errorMessage = "Failed to delete part";
+                setErr(errorMessage);
+                console.error("Delete Part Error:", errorMessage, "Status:", response.status);
+            }
+        } catch (error) {
+            console.error("Network or unexpected error during DELETE request:", error);
+            setErr(`Network error: ${error.message}. Please check your backend server.`);
+        }
+    }
+
 
   const handleCloseEdit = () => {
     console.log("Close edit launching properly")
@@ -123,7 +155,7 @@ function PartDataBase() {
 
   const handleSavePartChanges = async () => {
     console.log("handleSavePartChanges launching")
-    console.log("Part to Edit: ", partToEdit)
+    console.log("Original Part to Edit: ", originalPartToEdit)
     try{
        const updatedPart = {
         vendor: editVendor,
@@ -208,8 +240,6 @@ function PartDataBase() {
       setData(responseData);
 
       if (response.ok) {
-        console.log("backend Search connection successful");
-        console.log("ResponseData: ", responseData);
         console.log("Response Data only value", responseData.data);
       } else {
         setErr("No response");
@@ -398,7 +428,8 @@ function PartDataBase() {
               COST-
               <input value={partToDelete.cost} readOnly/>
             </div>
-            <button>Delete Part</button>
+            <button onClick={handlePartDelete()}>Delete Part</button>
+            <button onClick={handleCloseDelete()}>Cancel</button>
             </form>
             </div>
             </>
