@@ -112,16 +112,16 @@ function PartDataBase() {
     setDeleteCost(partData.cost);
   }
 
-  const handlePartDelete = async (partToDelete) => {
-    console.log("(partToDelete Value) Launching when popup call delete clicked: ", partToDelete);
+  const handlePartDelete = async (deleteVendor, deletePartNo, deletePartDesc, deleteCost) => {
+    console.log("(partToDelete Value) Launching when popup call vendor to delete clicked: ", deleteVendor);
     try{
-      console.log("Attempting to delete part: ", partToDelete);
+      console.log("Attempting to delete part: ", deleteVendor);
       const response = await fetch("/parts", {
         method: "DELETE",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(partToDelete),
+        body: JSON.stringify({deleteVendor, deleltePartNo, deletePartDesc, deleteCost}),
       });
       console.log("DELETE response: ", response);
     

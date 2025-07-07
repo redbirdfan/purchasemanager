@@ -289,7 +289,8 @@ app.post("/parts", async(req, res) => {
         
         app.delete("/parts", async(req, res) => {
             console.log("Delete request received");
-
+            console.log("Req body: ", req)
+            
             const vendor = req.body.vendor;
             const partNo = req.body.partno;
             const partDesc = req.body.partdesc
