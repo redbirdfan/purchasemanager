@@ -22,31 +22,38 @@ function Table({ columns, data, handleEditClick, handleDeleteClick }) {
     <table className="table-spacing" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                {column.render("Header")}
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+            {headerGroup.headers.map((column) => {
+              const allProps = column.getHeaderProps(column.getSortByToggleProps());
+              const { key, ...rest } = allProps;
+                 
+              return(
+                  <th key={key} {...rest}>
+                  {column.render("Header")}
                 <span>
                   {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
                 </span>
               </th>
-            ))}
+            );
+        })}
           </tr>
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
+          const rowProps = row.getRowProps();
           return (
-            <tr {...row.getRowProps()} key={row.id} style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}}>
-              
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()} key={cell.column.id}>
+            <tr  key={row.id} {...rowProps} style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}}>
+              {row.cells.map((cell) => (
+                <td {...cell.getCellProps()} key={cell.column.id}>
                   {cell.render("Cell")}
-                </td>;
-              })}
-              <button style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row)}>Edit Part</button>
-           {/*}   <button style={{backgroundColor: i % 2 == 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>*/}
+                </td>
+        ))}
+            <td colSpan={columns.length}>
+              <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row)}>Edit Part</button>
+           {/*}   <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>*/}
+            </td>
             </tr>
           );
         })}
@@ -54,6 +61,7 @@ function Table({ columns, data, handleEditClick, handleDeleteClick }) {
     </table>
   );
 }
+
 
 function PartDataBase() {
   const [vendor, setVendor] = useState("");
@@ -89,7 +97,7 @@ function PartDataBase() {
 
 
   const handleEditClick = (row) => {
-    console.log("handleEditClick launching")
+    console.log("handleEditClick launching ", row.original )
     setPartToEdit(true);
     
     setOriginalEditVendor(row.original.vendor);
@@ -100,9 +108,7 @@ function PartDataBase() {
     setEditVendor(row.original.vendor);
     setEditPartNo(row.original.partno);
     setEditPartDesc(row.original.partdesc);
-    setEditCost(row.original.cost);
-
-    console.log("PartData setting: ", partToEdit);  
+    setEditCost(row.original.cost); 
   };
 {/*}
   function handleDeleteClick(partData) {
@@ -113,7 +119,7 @@ function PartDataBase() {
     setDeletePartNo(partData.partno);
     setDeletePartDesc(partData.partdesc);
     setDeleteCost(partData.cost);
-  }*/}
+  }
 
   const handlePartDelete = async (deleteVendor, deletePartNo, deletePartDesc, deleteCost) => {
     console.log("(partToDelete Value) Launching when popup call vendor to delete clicked: ", deleteVendor);
@@ -124,7 +130,7 @@ function PartDataBase() {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({deleteVendor, deletePartNo, deletePartDesc, deleteCost}),
+        body: JSON.stringify({vendor, partNo, partDesc, cost}),
       });
       console.log("DELETE response: ", response);
     
@@ -145,7 +151,7 @@ function PartDataBase() {
         }
     }
 
-
+*/}
   const handleCloseEdit = () => {
     console.log("Close edit launching properly")
     setPartToEdit(null);
@@ -156,66 +162,9 @@ function PartDataBase() {
     setPartToDelete(null);
   }
 
-  const handleSavePartChanges = async() => {
-    console.log("handleSavePartChanges launching")
-    console.log("Original Part to Edit: ", originalPartToEdit)
-    try{
-       const updatedPart = {
-        vendor: editVendor,
-        partno: editPartNo,
-        partdesc: editPartDesc,
-        cost: editCost,
-      };
-
-      console.log("Saving changes for part:", updatedPart);
-      
-      if(originalEditVendor === updatedPart.vendor &&
-        originalEditPartno === updatedPart.partno &&
-        originalEditPartDesc === updatedPart.partdesc &&
-        originalEditCost === updatedPart.cost){
-        console.log("No changes were made")
-        handleCloseEdit()
-        return
-      } else {
-        let partEditInfo = {};
-      if(originalEditVendor != updatedPart.vendor){
-          partEditInfo.push(updatedPart.vendor)
-      } else {partEditInfo.push(originalEditVendor)}
-      
-      if(originalEditPartNo != updatedPart.partno){
-          partEditInfo.push(updatedPart.partno)
-      } else {partEditInfo.push(originalEditPartNo)}
-
-      if(originalEditPartDesc != updatedPart.partdesc){
-        partEditInfo.push(updatedPart.partdesc)
-      } else {partEditInfo.push(originalEditPartDesc)}
-
-      if(originalEditCost != updatedPart.cost){
-        partEditInfo.push(updatedPart.cost)
-      } else {partEditInfo.push(originalEditCost)}
-
-      const response = await fetch(`/UpdateParts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(partEditInfo),
-        
-      });
-
-      console.log("Stringified Json: ", partEditInfo)
-
-      if (response.ok) {
-        console.log("Part updated successfully!");
-        findPart({ preventDefault: () => {} });
-        handleCloseEdit(); 
-      } else {
-        console.error("Failed to update part:", response.statusText);
-      }
-    }  
-  } catch (error) {
-      console.error("Error saving changes:", error);
-      }
+  function handleSavePartChanges(){
+        console.log("Original part data: ", originalEditVendor, originalEditPartDesc, originalEditPartNo);
+        console.log("Edit part data: ", editVendor, editPartNo, editPartDesc, editCost);
     }
       
 
