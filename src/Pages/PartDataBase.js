@@ -162,9 +162,48 @@ function PartDataBase() {
     setPartToDelete(null);
   }
 
-  function handleSavePartChanges(){
+  const handleSavePartChanges = async() => {
         console.log("Original part data: ", originalEditVendor, originalEditPartDesc, originalEditPartNo);
         console.log("Edit part data: ", editVendor, editPartNo, editPartDesc, editCost);
+
+        try{
+       const savePart = {
+        vendor: editVendor,
+        partno: editPartNo,
+        partdesc: editPartDesc,
+        cost: editCost,
+      };
+
+      console.log("Saving changes for part:", savePart);
+      
+      if(originalEditVendor === savePart.vendor &&
+        originalEditPartno === savePart.partno &&
+        originalEditPartDesc === savePart.partdesc &&
+        originalEditCost === savePart.cost &&
+      ){
+        console.log("No changes were made")
+        handleCloseEdit()
+        return
+      } else {
+      const response = await fetch(`/parts/${savePart}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(savePart),
+      });
+
+      if (response.ok) {
+        console.log("Part updated successfully!");
+        findRow({ preventDefault: () => {} });
+        handleCloseEdit(); 
+      }else {
+        console.error("Failed to update row:", response.statusText);
+      }
+    }  
+  } catch (error) {
+      console.error("Error saving changes:", error);
+      }
     }
       
 
