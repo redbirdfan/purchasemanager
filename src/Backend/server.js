@@ -461,45 +461,27 @@ app.post("/parts", async(req, res) => {
                 }
             });
 
-        app.post("/UpdateParts", async(req, res) => {
-            let errors = [];
-            console.log("edit part req body: ", req)
+        app.post("/UpdateParts", async (req, res) => {
+            
             console.log("Update parts being called")
             frontendData = req.body
-            console.log("Trying to update order, Frontend sent: ", frontendData)
-            const partData = frontendData
-            console.log("OrderData value: ", partData)
-
-            try{
-                for (const line of partData){
-                const [vendor, partno, partdesc, cost] = line;   
-                const post = 'INSERT INTO parts (ovendor, partno, partdesc, cost) VALUES (?,?,?,?)'
+            console.log("Frontend sent: ", frontendData)
+            const { partno, partdesc, cost} = frontendData
             
-                await new Promise((resolve, reject) => {
-                app.db.query(post, [vendor, partno, partdesc, cost], (err, results) => {
-                    if(err) {
-                        console.err("Error editing part", err)
-                        errors.push(err)
-                        reject(err);
-                    } else{
-                        res.status(200).json({ message: "Part updated successfully" })
-                        console.log("Part edited successfully: ", results)
-                        resolve(results)
-                        }
-                    });
-                });
+            try {
+                const result = await app.db.query(
+                "UPDATE parts SET  partdesc = ?, cost = ? WHERE partno = ?",
+                [ partdesc, cost, partno]
+        )
+                res.status(200).send({ message: "Part updated successfully." });
+            } catch (error) {
+                console.error("Database update error:", error);
+                res.status(500).send({ message: "Internal server error." });
             }
-            
-            res.status(200).json({ message: "Part edited successfully" });
-        } catch (error){
-            console.log("Order could not be created")
-        }
-    });
-
-
-
-}
-
+        });
+        
+    }
     
+
 startServer();
     

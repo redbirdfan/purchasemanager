@@ -6,7 +6,7 @@ import { useTable, useSortBy } from "react-table";
 import "../Table.css";
 import Popup from "reactjs-popup";
 
-function Table({ columns, data, handleEditClick, handleDeleteClick }) {
+function Table({ columns, data, handleEditClick, handleSavePartChanges, handleDeleteClick }) {
 
   console.log("Table received props: ", { columns, data });
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -110,48 +110,6 @@ function PartDataBase() {
     setEditPartDesc(row.original.partdesc);
     setEditCost(row.original.cost); 
   };
-{/*}
-  function handleDeleteClick(partData) {
-    console.log("handleDeleteClick launching, asigning partData to setPartToDelete")
-    console.log("Part Data: ", partData)
-    setPartToDelete(partData);
-    setDeleteVendor(partData.vendor);
-    setDeletePartNo(partData.partno);
-    setDeletePartDesc(partData.partdesc);
-    setDeleteCost(partData.cost);
-  }
-
-  const handlePartDelete = async (deleteVendor, deletePartNo, deletePartDesc, deleteCost) => {
-    console.log("(partToDelete Value) Launching when popup call vendor to delete clicked: ", deleteVendor);
-    try{
-      console.log("Attempting to delete part: ", deleteVendor);
-      const response = await fetch("/parts", {
-        method: "DELETE",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({vendor, partNo, partDesc, cost}),
-      });
-      console.log("DELETE response: ", response);
-    
-       if (response.ok) {
-                const data = await response.json(); 
-                console.log("Part deleted successfully:", data);
-                setErr("Part deleted successfully!"); 
-      
-            } else {
-                const errorData = await response.json();
-                const errorMessage = "Failed to delete part";
-                setErr(errorMessage);
-                console.error("Delete Part Error:", errorMessage, "Status:", response.status);
-            }
-        } catch (error) {
-            console.error("Network or unexpected error during DELETE request:", error);
-            setErr(`Network error: ${error.message}. Please check your backend server.`);
-        }
-    }
-
-*/}
   const handleCloseEdit = () => {
     console.log("Close edit launching properly")
     setPartToEdit(null);
@@ -163,12 +121,13 @@ function PartDataBase() {
   }
 
   const handleSavePartChanges = async() => {
-        console.log("Original part data: ", originalEditVendor, originalEditPartDesc, originalEditPartNo);
-        console.log("Edit part data: ", editVendor, editPartNo, editPartDesc, editCost);
+        console.log("Called handleSavePartChanges")
+        console.log("Original part data: ",  originalEditPartNo, originalEditPartDesc, originalEditCost);
+        console.log("Edit part data: ",  editPartNo, editPartDesc, editCost);
 
         try{
        const savePart = {
-        vendor: editVendor,
+        
         partno: editPartNo,
         partdesc: editPartDesc,
         cost: editCost,
@@ -177,15 +136,16 @@ function PartDataBase() {
       console.log("Saving changes for part:", savePart);
       
       if(originalEditVendor === savePart.vendor &&
-        originalEditPartno === savePart.partno &&
+        originalEditPartNo === savePart.partno &&
         originalEditPartDesc === savePart.partdesc &&
-        originalEditCost === savePart.cost &&
-      ){
+        originalEditCost === savePart.cost){
+        
         console.log("No changes were made")
         handleCloseEdit()
+       
         return
       } else {
-      const response = await fetch(`/parts/${savePart}`, {
+      const response = await fetch(`/UpdateParts/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -396,7 +356,7 @@ function PartDataBase() {
             </div>
             <div>
               PART-
-              <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)}/>
+              <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)} readOnly/>
             </div>
             <div>
               DESC-
