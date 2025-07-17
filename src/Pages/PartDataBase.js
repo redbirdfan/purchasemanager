@@ -115,10 +115,37 @@ function PartDataBase() {
     setPartToEdit(null);
   }
 
-  const handleCloseDelete = () =>{
+  const handleCloseDelete = async() =>{
     console.log("Close delete launching properly")
-    setPartToDelete(null);
-  }
+    
+    try{
+      const deletePart={
+        partno: editPartNo,
+        partdesc: editPartDesc,
+        cost: editCost,
+      };
+      console.log("Part for delete info: ", deletePart)
+    
+        const response = await fetch(`/DeleteParts/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(deletePart),
+      });
+
+      if (response.ok) {
+        console.log("Part deleted successfully!");
+        findRow({ preventDefault: () => {} });
+        handleCloseEdit(); 
+      }else {
+        console.error("Failed to delete row:", response.statusText);
+      }
+    }  catch (error) {
+      console.error("Error deleting: ", error);
+      }
+    }
+  
 
   const handleSavePartChanges = async() => {
         console.log("Called handleSavePartChanges")
@@ -127,12 +154,11 @@ function PartDataBase() {
 
         try{
        const savePart = {
-        
         partno: editPartNo,
         partdesc: editPartDesc,
         cost: editCost,
       };
-
+      
       console.log("Saving changes for part:", savePart);
       
       if(originalEditVendor === savePart.vendor &&
