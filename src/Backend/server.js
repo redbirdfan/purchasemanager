@@ -470,7 +470,7 @@ app.post("/parts", async(req, res) => {
             
             try {
                 const result = await app.db.query(
-                "UPDATE parts SET  partdesc = ?, cost = ? WHERE partno = ?",
+                "UPDATE parts SET partdesc = ?, cost = ? WHERE partno = ?",
                 [ partdesc, cost, partno]
         )
                 res.status(200).send({ message: "Part updated successfully." });
@@ -480,8 +480,26 @@ app.post("/parts", async(req, res) => {
             }
         });
         
-    }
-    
+        app.delete("/DeletePart", async (req, res) => {
+                console.log("DeletePart being called")
+                frontendData = req.body;
+                console.log("frontend data: ", frontendData);
+                partnoToDelete = frontendData.partno;
 
+                try{const result = await(app.db.query(
+                    "DELETE FROM parts WHERE partno = ?", [partnoToDelete]
+                )
+            )
+                res.status(200).send({ message: "Part deleted successfully"});
+            } catch (error) {
+                console.error("Database update error:", error);
+                res.status(500).send({ message: "Internal server error." });
+            }
+        });
+               
+    }
+        
+
+    
 startServer();
     

@@ -52,7 +52,7 @@ function Table({ columns, data, handleEditClick, handleSavePartChanges, handleDe
         ))}
             <td colSpan={columns.length}>
               <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row)}>Edit Part</button>
-           {/*}   <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>*/}
+              <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>
             </td>
             </tr>
           );
@@ -115,7 +115,7 @@ function PartDataBase() {
     setPartToEdit(null);
   }
 
-  const handleCloseDelete = async() =>{
+  const handleDeleteClick = async() =>{
     console.log("Close delete launching properly")
     
     try{
@@ -126,7 +126,7 @@ function PartDataBase() {
       };
       console.log("Part for delete info: ", deletePart)
     
-        const response = await fetch(`/DeleteParts/`, {
+        const response = await fetch(`/DeletePart/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -365,7 +365,8 @@ function PartDataBase() {
             partdesc: item.partdesc === null ? "" : item.partdesc,
             cost: item.cost === null ? "" : item.cost,
           }))}  
-           handleEditClick={handleEditClick} 
+           handleEditClick={handleEditClick}
+           handleDeleteClick={handleDeleteClick}
                      
         />
       </div>
