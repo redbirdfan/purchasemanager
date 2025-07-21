@@ -488,7 +488,7 @@ app.post("/parts", async(req, res) => {
 
                 try{const result = await(app.db.query(
                     "DELETE FROM parts WHERE partno = ?", [partnoToDelete]
-                )
+                ) 
             )
                 res.status(200).send({ message: "Part deleted successfully"});
             } catch (error) {
