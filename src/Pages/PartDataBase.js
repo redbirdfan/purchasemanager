@@ -51,8 +51,8 @@ function Table({ columns, data, handleEditClick, handleSavePartChanges, handleDe
                 </td>
         ))}
             <td colSpan={columns.length}>
-              <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row)}>Edit Part</button>
-              <button style={{backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>
+              <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px", backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleEditClick(row)}>Edit Part</button>
+              <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px", backgroundColor: i % 2 === 0 ? "lightgreen" : "lightgray"}} onClick={() => handleDeleteClick(row)}>Delete Part</button>
             </td>
             </tr>
           );
@@ -365,9 +365,9 @@ function PartDataBase() {
 </form>
         <br></br>
       <div style={{display: 'flex', justifyContent: 'center'}}>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "4px"}} onClick={findPart}>Find Part</button>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "4px", marginRight: "4px"}} onClick={newPart}>Create Part</button>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "4px"}}onClick={clearSearch}>Clear Search</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px"}} onClick={findPart}>Find Part</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px"}} onClick={newPart}>Create Part</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "8px"}}onClick={clearSearch}>Clear Search</button>
       </div>
       
 {searchComplete === true &&
