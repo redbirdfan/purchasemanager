@@ -137,7 +137,9 @@ function PartDataBase() {
       if (response.ok) {
         console.log("Part deleted successfully!");
         findRow({ preventDefault: () => {} });
-        handleCloseEdit(); 
+        findPart();
+        handleCloseEdit();
+         
       }else {
         console.error("Failed to delete row:", response.statusText);
       }
@@ -154,9 +156,10 @@ function PartDataBase() {
 
         try{
        const savePart = {
-        partno: editPartNo,
+        partno: originalEditPartNo,
         partdesc: editPartDesc,
         cost: editCost,
+        newPartNo: editPartNo
       };
       
       console.log("Saving changes for part:", savePart);
@@ -168,7 +171,7 @@ function PartDataBase() {
         
         console.log("No changes were made")
         handleCloseEdit()
-       
+        
         return
       } else {
       const response = await fetch(`/UpdateParts/`, {
@@ -182,6 +185,8 @@ function PartDataBase() {
       if (response.ok) {
         console.log("Part updated successfully!");
         findRow({ preventDefault: () => {} });
+        console.log("Making it to findpart() call: ", partNo);
+        setVendor(originalEditVendor)
         handleCloseEdit(); 
       }else {
         console.error("Failed to update row:", response.statusText);
@@ -234,7 +239,14 @@ function PartDataBase() {
       });
 
       const responseData = await response.json();
-      setData(responseData);
+
+      for(let i = 0; responseData.length; i++){
+        if(responseData.data[i].partno == null){
+          responseData.data[i].splice(i, i+1);
+        }
+      }
+      const vettedData = responseData;
+      setData(vettedData);
 
       if (response.ok) {
         console.log("Response Data only value", responseData.data);
@@ -313,9 +325,10 @@ function PartDataBase() {
       <header>
         <PageHeader />
       </header>
-      <h1>What are we looking for today?</h1>
+      <h1 style={{display: 'flex', justifyContent: 'center'}}>What are we looking for today?</h1>
       <form style={{display: 'flex', justifyContent: 'center'}}>
         <input
+          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           type="text"
           className="buttonpadding"
           placeholder="vendor"
@@ -325,6 +338,7 @@ function PartDataBase() {
 
         <input
           type="text"
+          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           className="buttonpadding"
           placeholder="part#"
           value={partNo}
@@ -334,6 +348,7 @@ function PartDataBase() {
         <input
           type="text"
           className="buttonpadding"
+          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           placeholder="Item Description"
           value={partDesc}
           onChange={(e) => setPartDesc(e.target.value)}
@@ -341,6 +356,7 @@ function PartDataBase() {
 
         <input
           type="number"
+          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           className="buttonpadding"
           placeholder="cost"
           value={cost}
@@ -349,13 +365,13 @@ function PartDataBase() {
 </form>
         <br></br>
       <div style={{display: 'flex', justifyContent: 'center'}}>
-        <button onClick={findPart}>Find Part</button>
-        <button onClick={newPart}>Create Part</button>
-        <button onClick={clearSearch}>Clear Search</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "4px"}} onClick={findPart}>Find Part</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "4px", marginRight: "4px"}} onClick={newPart}>Create Part</button>
+        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "4px"}}onClick={clearSearch}>Clear Search</button>
       </div>
       
-
-      <div>
+{searchComplete === true &&
+      <div style={{display: 'flex', justifyContent: 'center'}}>
         <Table
           columns={columns}
           data={data.data.map((item) => ({
@@ -370,6 +386,8 @@ function PartDataBase() {
                      
         />
       </div>
+}
+
       {partToEdit && (
         <Popup open={true} modal nested onClose={handleCloseEdit}>
           {(close) => {
@@ -382,8 +400,8 @@ function PartDataBase() {
               <input value={editVendor} onLoad={(e)=>setEditVendor(e.target.value)} readOnly/>
             </div>
             <div>
-              PART-
-              <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)} readOnly/>
+              PARTNo-
+              <input value={editPartNo} onChange={(e) => setEditPartNo(e.target.value)}/>
             </div>
             <div>
               DESC-

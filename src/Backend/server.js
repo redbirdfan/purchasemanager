@@ -466,12 +466,12 @@ app.post("/parts", async(req, res) => {
             console.log("Update parts being called")
             frontendData = req.body
             console.log("Frontend sent: ", frontendData)
-            const { partno, partdesc, cost} = frontendData
+            const { partno, partdesc, cost, newPartNo} = frontendData
             
             try {
                 const result = await app.db.query(
-                "UPDATE parts SET partdesc = ?, cost = ? WHERE partno = ?",
-                [ partdesc, cost, partno]
+                "UPDATE parts SET partno = ?, partdesc = ?, cost = ?  WHERE partno = ?",
+                [ newPartNo, partdesc, cost, partno]
         )
                 res.status(200).send({ message: "Part updated successfully." });
             } catch (error) {

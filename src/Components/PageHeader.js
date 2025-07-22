@@ -27,7 +27,7 @@ function PageHeader(){
         <div>
           {firstName && lastName && <p>User: {firstName} {lastName}</p>}
         </div>
-        <div style={{display: "flex", justifyContent:"center"}}>
+        <div style={{display: "flex", justifyContent:"center", paddingTop:"10px", paddingBottom:"20px"}}>
         <Link to={"/NewOrder"} style={{marginRight: "50px"}}>New Order</Link>
         <Link to={"/PartDataBase"} style={{marginRight: "30px", marginLeft: "30px"}}>Find a Part#</Link>
         <Link to={"/SearchOrder"} style={{marginRight: "30px", marginLeft: "30px"}}>Find Order</Link>
