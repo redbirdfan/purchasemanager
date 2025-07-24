@@ -137,7 +137,7 @@ function PartDataBase() {
       if (response.ok) {
         console.log("Part deleted successfully!");
         findRow({ preventDefault: () => {} });
-        findPart();
+        
         handleCloseEdit();
          
       }else {
@@ -328,7 +328,7 @@ function PartDataBase() {
       <h1 style={{display: 'flex', justifyContent: 'center'}}>What are we looking for today?</h1>
       <form style={{display: 'flex', justifyContent: 'center'}}>
         <input
-          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
+          //style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           type="text"
           className="buttonpadding"
           placeholder="vendor"
@@ -338,7 +338,6 @@ function PartDataBase() {
 
         <input
           type="text"
-          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           className="buttonpadding"
           placeholder="part#"
           value={partNo}
@@ -348,7 +347,6 @@ function PartDataBase() {
         <input
           type="text"
           className="buttonpadding"
-          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           placeholder="Item Description"
           value={partDesc}
           onChange={(e) => setPartDesc(e.target.value)}
@@ -356,7 +354,6 @@ function PartDataBase() {
 
         <input
           type="number"
-          style={{borderOutline: 'black', borderRadius: '8px', width: "150px"}}
           className="buttonpadding"
           placeholder="cost"
           value={cost}
@@ -365,9 +362,9 @@ function PartDataBase() {
 </form>
         <br></br>
       <div style={{display: 'flex', justifyContent: 'center'}}>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px"}} onClick={findPart}>Find Part</button>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginRight: "8px"}} onClick={newPart}>Create Part</button>
-        <button style={{borderOutline: 'black', borderRadius: '8px', width: "100px", marginLeft: "8px"}}onClick={clearSearch}>Clear Search</button>
+        <button className='buttonpadding' onClick={findPart}>Find Part</button>
+        <button className='buttonpadding' onClick={newPart}>Create Part</button>
+        <button className='buttonpadding' onClick={clearSearch}>Clear Search</button>
       </div>
       
 {searchComplete === true &&
